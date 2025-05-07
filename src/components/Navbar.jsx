@@ -15,7 +15,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center ">
-            <img src="/Logo_vista.png" alt="Logo" className="h-22 py-1 px-4 mt-2" />
+            <img src="/Logo_vista.png" alt="Logo" className="h-22 py-1 px-4 mt-2"/>
             
           </div>
 
@@ -23,7 +23,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
               <a
-                href="/coin"
+                href="/coins"
                 className="text-white hover:bg-yellow-500 px-3 py-2 rounded-md text-2xl font-bold"
               >
                 COINS

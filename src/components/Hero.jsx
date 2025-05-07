@@ -35,7 +35,7 @@ export default function Hero() {
 className="flex flex-col md:flex-row h-[500vh] bg-gradient-to-b from-black  via-indigo-600 to-gray-900"
     >
       {/* Left Side */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-16 py-12 sticky top-0 h-screen">
+      <div className="w-full md:w-full flex flex-col justify-center px-8 md:px-16 py-12 sticky top-0 h-screen">
         <div className="text-gray-400 uppercase font-mono mb-2 text-sm md:text-base">
           A TOOL FOR
         </div>
@@ -81,7 +81,7 @@ className="flex flex-col md:flex-row h-[500vh] bg-gradient-to-b from-black  via-
       </div>
 
       {/* Right Side - Chart */}
-      <div className="w-full md:w-1/2 flex justify-center items-center p-4 md:p-8 sticky top-0 h-screen">
+      <div className="w-full hidden md:block justify-center items-center p-4 md:p-8 sticky top-30 h-screen ">
         <motion.div
           className="w-full flex justify-center items-center py-2 px-2 pt-20 rounded-2xl backdrop-blur-md"
           initial={{ opacity: 0 }}
