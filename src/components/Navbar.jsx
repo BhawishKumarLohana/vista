@@ -42,10 +42,10 @@ export default function Navbar() {
               </a>
             
               <a
-                href="/login"
+                href="/"
                 className="text-white  rounded-md text-2xl font-bold"
               >
-               <FaUser/>
+               <FaUser />
               </a>
             </div>
           </div>
