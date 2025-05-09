@@ -19,7 +19,7 @@ export default function GoogleSignInButton() {
         <img
           src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
           alt="Google"
-          style={{ height: "20px", marginRight: "10px" }}
+          style={{ height: "10px", marginRight: "10px" }}
         />
         Sign in with Google
       </button>
@@ -30,7 +30,6 @@ export default function GoogleSignInButton() {
 const containerStyle = {
   display: "flex",
   justifyContent: "center",
-  marginTop: "30px",
 };
 
 const buttonStyle = {
@@ -38,13 +37,9 @@ const buttonStyle = {
   color: "#000000",
   fontWeight: "bold",
   border: "none",
-  padding: "12px 20px",
   borderRadius: "6px",
   boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
+  padding:"10px 10px",
   fontSize: "16px",
-  transition: "background-color 0.2s ease-in-out",
 };
 
