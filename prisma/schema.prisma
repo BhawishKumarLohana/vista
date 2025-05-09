@@ -4,6 +4,8 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// prisma/schema.prisma
+
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -14,3 +16,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  user_id   Int              @id @default(autoincrement())
+  email     String           @unique
+  password  String
+  portfolio PortfolioEntry[] // one-to-many
+  alerts    Alert[]
+  records   TrackRecord[]
+}
+
+model Coin {
+  coin_id              Int              @id @default(autoincrement())
+  name                 String
+  symbol               String           @unique
+  slug                 String
+  cmc_rank             Int
+  price                Float
+  market_cap           Float
+  volume_24h           Float
+  percent_change_24h   Float
+  percent_change_7d    Float
+  last_updated         DateTime
+
+  portfolio PortfolioEntry[] // one-to-many
+  alerts    Alert[]
+  records   TrackRecord[]
+}
+
+model PortfolioEntry {
+  entry_id Int   @id @default(autoincrement())
+  amount   Float
+
+  user_id  Int
+  coin_id  Int
+
+  user     User @relation(fields: [user_id], references: [user_id])
+  coin     Coin @relation(fields: [coin_id], references: [coin_id])
+
+  @@unique([user_id, coin_id]) // each user can only have one entry per coin
+}
+
+model TrackRecord {
+  track_record_id Int      @id @default(autoincrement())
+  amount          Float
+  action          String
+  datetime        DateTime @default(now())
+
+  user_id Int
+  coin_id Int
+
+  user    User @relation(fields: [user_id], references: [user_id])
+  coin    Coin @relation(fields: [coin_id], references: [coin_id])
+}
+
+model Alert {
+  alert_id      Int @id @default(autoincrement())
+  floor_price   Int?
+  ceiling_price Int?
+
+  user_id Int
+  coin_id Int
+
+  user    User @relation(fields: [user_id], references: [user_id])
+  coin    Coin @relation(fields: [coin_id], references: [coin_id])
+}

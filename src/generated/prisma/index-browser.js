@@ -121,9 +121,47 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 });
 
 exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
+  user_id: 'user_id',
+  email: 'email',
+  password: 'password'
+};
+
+exports.Prisma.CoinScalarFieldEnum = {
+  coin_id: 'coin_id',
   name: 'name',
-  email: 'email'
+  symbol: 'symbol',
+  slug: 'slug',
+  cmc_rank: 'cmc_rank',
+  price: 'price',
+  market_cap: 'market_cap',
+  volume_24h: 'volume_24h',
+  percent_change_24h: 'percent_change_24h',
+  percent_change_7d: 'percent_change_7d',
+  last_updated: 'last_updated'
+};
+
+exports.Prisma.PortfolioEntryScalarFieldEnum = {
+  entry_id: 'entry_id',
+  amount: 'amount',
+  user_id: 'user_id',
+  coin_id: 'coin_id'
+};
+
+exports.Prisma.TrackRecordScalarFieldEnum = {
+  track_record_id: 'track_record_id',
+  amount: 'amount',
+  action: 'action',
+  datetime: 'datetime',
+  user_id: 'user_id',
+  coin_id: 'coin_id'
+};
+
+exports.Prisma.AlertScalarFieldEnum = {
+  alert_id: 'alert_id',
+  floor_price: 'floor_price',
+  ceiling_price: 'ceiling_price',
+  user_id: 'user_id',
+  coin_id: 'coin_id'
 };
 
 exports.Prisma.SortOrder = {
@@ -132,13 +170,32 @@ exports.Prisma.SortOrder = {
 };
 
 exports.Prisma.UserOrderByRelevanceFieldEnum = {
+  email: 'email',
+  password: 'password'
+};
+
+exports.Prisma.CoinOrderByRelevanceFieldEnum = {
   name: 'name',
-  email: 'email'
+  symbol: 'symbol',
+  slug: 'slug'
+};
+
+exports.Prisma.TrackRecordOrderByRelevanceFieldEnum = {
+  action: 'action'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
 };
 
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Coin: 'Coin',
+  PortfolioEntry: 'PortfolioEntry',
+  TrackRecord: 'TrackRecord',
+  Alert: 'Alert'
 };
 
 /**
