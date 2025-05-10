@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -28,9 +29,15 @@ export default function LoginPage() {
         return;
       }
 
+      // ✅ Store the token and user in localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
       alert("Login successful!");
       console.log("Logged in user:", data.user);
-      // Optional: store user data or redirect
+
+      // ✅ Redirect to dashboard
+      window.location.href = "/dashboard";
     } catch (err) {
       console.error("Login error:", err);
       alert("Something went wrong.");
@@ -60,7 +67,9 @@ export default function LoginPage() {
         </form>
         <p className="text-sm text-gray-400 mt-4 text-center">
           Don't have an account?{" "}
-          <a href="/signup" className="text-purple-400 hover:underline">Sign up</a>
+          <a href="/signup" className="text-purple-400 hover:underline">
+            Sign up
+          </a>
         </p>
       </div>
     </div>
