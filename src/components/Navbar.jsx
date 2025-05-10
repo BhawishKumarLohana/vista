@@ -40,6 +40,18 @@ export default function Navbar() {
               >
                 ALERT
               </a>
+              <a
+                href="/login"
+                className="text-white  hover:bg-yellow-500  px-3 py-2 rounded-md text-2xl font-bold"
+              >
+                LOGIN/SIGNUP
+              </a>
+              <a
+                href="/dashboard"
+                className="text-white  hover:bg-yellow-500  px-3 py-2 rounded-md text-2xl font-bold"
+              >
+                DASHBOARD
+              </a>
             
               <a
                 href="/"
