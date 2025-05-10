@@ -49,6 +49,19 @@ model Coin {
   portfolio PortfolioEntry[] // one-to-many
   alerts    Alert[]
   records   TrackRecord[]
+  historical HistoricalCoin[]
+}
+
+model HistoricalCoin {
+  id         Int      @id @default(autoincrement())
+  coin_id    Int
+  date       DateTime
+  open       Float
+  high       Float
+  low        Float
+  close      Float
+  volume     Float
+  coin       Coin     @relation(fields: [coin_id], references: [coin_id])
 }
 
 model PortfolioEntry {
