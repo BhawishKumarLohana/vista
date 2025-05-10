@@ -1,4 +1,4 @@
-const faker = require('faker');  // Make sure you're using the correct version of the faker package
+const { faker } = require('@faker-js/faker');  // Make sure you're using the correct version of the faker package
 const { PrismaClient } = require('@prisma/client');  // Prisma Client for database interaction
 
 const prisma = new PrismaClient();  // Initialize Prisma Client
@@ -9,18 +9,17 @@ async function generateFakeUsers(numUsers) {
 
   for (let i = 0; i < numUsers; i++) {
     const user = {
-      full_name: faker.person.fullName(),  // Use person.fullName() for the full name
-      username: faker.internet.userName(),
+      full_Name: faker.person.fullName(),
       email: faker.internet.email(),
-      password: faker.internet.password(),  // You should ideally hash the password before saving
-      dob: faker.date.past(18, new Date()),  // Generate a random date of birth for a user aged 18+
-      created_at: faker.date.recent()  // Create a recent date for 'created_at'
+      password: faker.internet.password(),
+      displayName: faker.person.firstName() // optional field
     };
     users.push(user);
   }
 
   return users;
 }
+
 
 // Function to save fake users to the database
 async function saveUsersToDatabase(users) {
