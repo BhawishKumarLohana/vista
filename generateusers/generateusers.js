@@ -1,51 +1,87 @@
-const { faker } = require('@faker-js/faker');  // Make sure you're using the correct version of the faker package
-const { PrismaClient } = require('@prisma/client');  // Prisma Client for database interaction
+const axios = require('axios');
+const { PrismaClient } = require('@prisma/client');
+const cron = require('node-cron');  // Import node-cron
 
-const prisma = new PrismaClient();  // Initialize Prisma Client
+// Initialize Prisma Client
+const prisma = new PrismaClient();
 
-// Function to generate fake users
-async function generateFakeUsers(numUsers) {
-  const users = [];
+// API key directly in the script
+const API_KEY = 'd7d7ed92-da9d-45c2-a2be-dbb97f1ee5ee'; 
+const url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest';
 
-  for (let i = 0; i < numUsers; i++) {
-    const user = {
-      full_Name: faker.person.fullName(),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-      displayName: faker.person.firstName() // optional field
-    };
-    users.push(user);
-  }
+// Set up headers with your API key
+const headers = {
+  'X-CMC_PRO_API_KEY': API_KEY,
+  Accept: 'application/json'
+};
 
-  return users;
-}
+const params = {
+  start: '1',
+  limit: '50',
+  convert: 'USD'
+};
 
+async function fetchAndSaveCoins() {
+  try {
+    // Fetch data from CoinMarketCap API
+    const res = await axios.get(url, { headers, params });
+    const coins = res.data.data;
+    console.log(coins);
 
-// Function to save fake users to the database
-async function saveUsersToDatabase(users) {
-  for (const user of users) {
-    try {
-      await prisma.user.create({
-        data: user
+    // Process each coin
+    for (const coin of coins) {
+      const {
+        name,
+        symbol,
+        slug,
+        cmc_rank,
+        quote,
+        last_updated
+      } = coin;
+
+      const usd = quote.USD;
+
+      // Upsert the coin data into the database
+      await prisma.coin.upsert({
+        where: { symbol },
+        update: {
+          name,
+          slug,
+          cmc_rank,
+          price: usd.price,
+          market_cap: usd.market_cap,
+          volume_24h: usd.volume_24h,
+          percent_change_24h: usd.percent_change_24h,
+          percent_change_7d: usd.percent_change_7d,
+          last_updated: new Date(last_updated)
+        },
+        create: {
+          name,
+          symbol,
+          slug,
+          cmc_rank,
+          price: usd.price,
+          market_cap: usd.market_cap,
+          volume_24h: usd.volume_24h,
+          percent_change_24h: usd.percent_change_24h,
+          percent_change_7d: usd.percent_change_7d,
+          last_updated: new Date(last_updated)
+        }
       });
-      console.log(`✅ User ${user.username} saved.`);
-    } catch (err) {
-      console.error(`❌ Error saving user ${user.username}:`, err.message);
+
+      console.log(`✅ ${name} (${symbol}) saved.`);
     }
+
+    console.log('🎉 All coins processed.');
+  } catch (err) {
+    console.error('❌ Error:', err.message);
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
-async function main() {
-  const numUsers = 10;  // Number of fake users to generate
-  const fakeUsers = await generateFakeUsers(numUsers);  // Generate fake users
-  await saveUsersToDatabase(fakeUsers);  // Save them to the database
+// Schedule the task to run every day at midnight (00:00)
+cron.schedule('0 0 * * *', fetchAndSaveCoins);
 
-  // Disconnect Prisma client
-  await prisma.$disconnect();
-}
-
-// Call the main function
-main().catch((err) => {
-  console.error("❌ Error:", err.message);
-  prisma.$disconnect();
-});
+// Call the function once immediately for testing
+fetchAndSaveCoins();
