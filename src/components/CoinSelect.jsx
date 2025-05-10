@@ -8,11 +8,13 @@ function CoinSelect() {
   const [selectedCoin, setSelectedCoin] = useState("");
   const [action, setAction] = useState("buy");
   const [threshold, setThreshold] = useState("");
-  const [alerts,setAlerts] = useState([]);
-  const [showAlerts,setShowAlerts] =useState(false);
+  const [alerts, setAlerts] = useState([]);
+  const [showAlerts, setShowAlerts] = useState(false);
+
   const toggleShowAlerts = () => {
     setShowAlerts(!showAlerts);
   };
+
   useEffect(() => {
     async function fetchCoins() {
       const res = await fetch("/api/coins");
@@ -23,13 +25,33 @@ function CoinSelect() {
     fetchCoins();
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedCoin || !threshold) return;
-    setAlerts((prev) => [...prev, { selectedCoin, action, threshold }]);
-    setSelectedCoin("");
 
-    setAction("buy");
-    setThreshold("");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to create alerts.");
+      return;
+    }
+
+    const res = await fetch("/api/alerts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ selectedCoin, action, threshold }),
+    });
+
+    if (res.ok) {
+      const newAlert = await res.json();
+      setAlerts((prev) => [...prev, { ...newAlert, selectedCoin, action }]);
+      setSelectedCoin("");
+      setAction("buy");
+      setThreshold("");
+    } else {
+      console.error("Error creating alert:", await res.text());
+    }
   };
 
   return (
@@ -82,21 +104,20 @@ function CoinSelect() {
           onClick={handleSubmit}
           className="w-full md:w-auto bg-green-600 hover:bg-green-500 text-white mt-4 md:mt-6 px-6 py-2"
         >
-         Alert
+          Alert
         </Button>
-        {/* Get Alerts Button */}
-      <div className="mt-4 text-right">
-        <Button
-          onClick={toggleShowAlerts}
-          className="bg-purple-700 hover:bg-purple-600 text-white"
-        >
-          {showAlerts ? "Hide Alerts" : "Get Alerts"}
-        </Button>
+
+        {/* Toggle Alerts Button */}
+        <div className="mt-4 text-right">
+          <Button
+            onClick={toggleShowAlerts}
+            className="bg-purple-700 hover:bg-purple-600 text-white"
+          >
+            {showAlerts ? "Hide Alerts" : "Get Alerts"}
+          </Button>
+        </div>
       </div>
 
-      
-
-      </div>
       {/* Alerts List */}
       {showAlerts && alerts.length > 0 && (
         <div className="mt-6 bg-gray-800/50 border border-purple-600 rounded-lg p-4">
@@ -104,13 +125,13 @@ function CoinSelect() {
           <ul className="space-y-2">
             {alerts.map((alert, index) => (
               <li key={index} className="text-white bg-gray-900/60 p-2 rounded-md">
-                {alert.action.toUpperCase()} <span className="text-purple-400">{alert.selectedCoin}</span> at ${alert.threshold}
+                {alert.action.toUpperCase()}{" "}
+                <span className="text-purple-400">{alert.selectedCoin}</span> at ${alert.threshold}
               </li>
             ))}
           </ul>
         </div>
       )}
-
     </div>
   );
 }

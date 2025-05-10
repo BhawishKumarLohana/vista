@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -28,9 +29,15 @@ export default function SignUpPage() {
         return;
       }
 
+      // ✅ Store JWT and user in localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
       alert("Signup successful!");
       console.log("New user:", data.user);
-      // Optionally redirect to login or dashboard
+
+      // ✅ Redirect to dashboard
+      window.location.href = "/dashboard";
     } catch (err) {
       console.error("Signup error:", err);
       alert("Something went wrong.");
