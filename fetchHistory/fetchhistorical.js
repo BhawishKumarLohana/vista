@@ -12,7 +12,7 @@ async function fetchAndSaveHistorical(coinSymbol, coinId) {
       params: {
         fsym: coinSymbol,
         tsym: 'USD',
-        limit: 10,
+        limit: 10, //can change to 2000
         api_key: API_KEY,
       },
     });

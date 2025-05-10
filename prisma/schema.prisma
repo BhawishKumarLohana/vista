@@ -20,7 +20,7 @@ model User {
   email         String        @unique
   password      String        @default("")
   displayName   String?
-  photoUrl      String?
+  fullName      String
   settings      UserSettings?
   portfolio     PortfolioEntry[]
   alerts        Alert[]
