@@ -7,11 +7,34 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email) return;
-    console.log("SIGN UP with email:", email);
-    // TODO: Replace with backend integration
+    if (!email || !password) return;
+
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          action: "signup",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || "Signup failed");
+        return;
+      }
+
+      alert("Signup successful!");
+      console.log("New user:", data.user);
+      // Optionally redirect to login or dashboard
+    } catch (err) {
+      console.error("Signup error:", err);
+      alert("Something went wrong.");
+    }
   };
 
   return (
@@ -36,8 +59,8 @@ export default function SignUpPage() {
           <Button type="submit">Sign Up</Button>
         </form>
         <p className="text-sm text-gray-400 mt-4 text-center">
-          Already have an account? <a href="/login" className="text-purple-400 hover:underline">Login</a>
-          
+          Already have an account?{" "}
+          <a href="/login" className="text-purple-400 hover:underline">Login</a>
         </p>
       </div>
     </div>
