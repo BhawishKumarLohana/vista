@@ -1,33 +1,20 @@
-// CoinSelect.js
-import React, { useEffect, useState } from 'react';
+import { ShowCoins } from "@/lib/db";
 
-const CoinSelect = () => {
-  const [allCoins, setAllCoins] = useState([]);
-
-  useEffect(() => {
-    const fetchCoins = async () => {
-      try {
-        const response = await fetch('/api/getCoins');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const coins = await response.json();
-        setAllCoins(coins);
-      } catch (error) {
-        console.error('Failed to fetch coins:', error);
-      }
-    };
-
-    fetchCoins();
-  }, []);
-
+async function  CoinSelect() {
+    
+    const AllCoins = await ShowCoins()
   return (
+    
     <div>
-      {allCoins.map((eachCoin) => (
-        <p key={eachCoin.coin_id}>{eachCoin.name}</p>
-      ))}
+        {AllCoins.map(eachCoin => <div key={eachCoin.coin_id}>
+            <h3>{eachCoin.name}</h3>
+            <h3>{eachCoin.price}</h3>
+            
+            
+            </div>)}
     </div>
-  );
-};
 
-export default CoinSelect;
+  )
+}
+
+export default CoinSelect
