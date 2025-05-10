@@ -45,7 +45,7 @@ export default function Navbar() {
                 href="/"
                 className="text-white  rounded-md text-xl"
               >
-               <GoogleSignInButton/>
+               
               </a>
             </div>
           </div>
