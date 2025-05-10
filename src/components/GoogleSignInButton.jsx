@@ -1,14 +1,17 @@
 "use client";
 
 import { loginWithGoogle } from "@/firebase";
+import { createUserIfNotExists } from "@/lib/userService";
 
 export default function GoogleSignInButton() {
   const handleSignIn = async () => {
     try {
-      const user = await loginWithGoogle();
-      console.log("Signed in user:", user);
-      alert(`Welcome, ${user.displayName}`);
+      const googleUser = await loginWithGoogle();
+      const savedUser = await createUserIfNotExists(googleUser);
+      console.log("Signed in and stored user:", savedUser);
+      alert(`Welcome, ${savedUser.displayName || savedUser.email}`);
     } catch (error) {
+      console.error("Login error:", error);
       alert("Google Sign-In failed");
     }
   };
@@ -19,7 +22,7 @@ export default function GoogleSignInButton() {
         <img
           src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
           alt="Google"
-          style={{ height: "10px", marginRight: "10px" }}
+          style={{ height: "20px", marginRight: "10px" }}
         />
         Sign in with Google
       </button>
@@ -30,6 +33,7 @@ export default function GoogleSignInButton() {
 const containerStyle = {
   display: "flex",
   justifyContent: "center",
+  marginTop: "20px",
 };
 
 const buttonStyle = {
@@ -39,7 +43,9 @@ const buttonStyle = {
   border: "none",
   borderRadius: "6px",
   boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-  padding:"10px 10px",
+  padding: "10px 16px",
   fontSize: "16px",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
 };
-

@@ -123,7 +123,15 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   user_id: 'user_id',
   email: 'email',
-  password: 'password'
+  password: 'password',
+  displayName: 'displayName',
+  photoUrl: 'photoUrl'
+};
+
+exports.Prisma.UserSettingsScalarFieldEnum = {
+  user_id: 'user_id',
+  currency: 'currency',
+  dark_mode: 'dark_mode'
 };
 
 exports.Prisma.CoinScalarFieldEnum = {
@@ -169,9 +177,20 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 exports.Prisma.UserOrderByRelevanceFieldEnum = {
   email: 'email',
-  password: 'password'
+  password: 'password',
+  displayName: 'displayName',
+  photoUrl: 'photoUrl'
+};
+
+exports.Prisma.UserSettingsOrderByRelevanceFieldEnum = {
+  currency: 'currency'
 };
 
 exports.Prisma.CoinOrderByRelevanceFieldEnum = {
@@ -184,14 +203,10 @@ exports.Prisma.TrackRecordOrderByRelevanceFieldEnum = {
   action: 'action'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 
 exports.Prisma.ModelName = {
   User: 'User',
+  UserSettings: 'UserSettings',
   Coin: 'Coin',
   PortfolioEntry: 'PortfolioEntry',
   TrackRecord: 'TrackRecord',

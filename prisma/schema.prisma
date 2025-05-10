@@ -8,7 +8,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -17,14 +16,23 @@ datasource db {
 }
 
 model User {
-  user_id   Int              @id @default(autoincrement())
-  email     String           @unique
-  password  String
-  portfolio PortfolioEntry[] // one-to-many
-  alerts    Alert[]
-  records   TrackRecord[]
+  user_id       Int           @id @default(autoincrement())
+  email         String        @unique
+  password      String        @default("")
+  displayName   String?
+  photoUrl      String?
+  settings      UserSettings?
+  portfolio     PortfolioEntry[]
+  alerts        Alert[]
+  records       TrackRecord[]
 }
+model UserSettings {
+  user_id   Int     @id
+  currency  String  @default("USD")
+  dark_mode Boolean @default(true)
 
+  user User @relation(fields: [user_id], references: [user_id])
+}
 model Coin {
   coin_id              Int              @id @default(autoincrement())
   name                 String

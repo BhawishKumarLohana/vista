@@ -3,12 +3,14 @@ import FeatureCard from "@/components/FeatureCard";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import Table from "@/components/Table";
+import GoogleSignInButton from "@/components/GoogleSignInButton"; // ✅ Add this
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center">
       <Hero />
 
+      <GoogleSignInButton /> {/* ✅ Renders the button */}
 
       <Table />
 
