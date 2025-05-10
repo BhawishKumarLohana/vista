@@ -9,8 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@faker-js/faker": "^9.7.0",
     "axios": "^1.9.0",
+=======
+    "firebase": "^11.7.1",
+>>>>>>> 7290eb8883f1f0018854501114b9d8af733f52f5
     "framer-motion": "^12.9.7",
     "next": "15.3.1",
     "react": "^19.0.0",

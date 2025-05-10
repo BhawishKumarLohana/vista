@@ -32,7 +32,7 @@ export default function Hero() {
   return (
     <div
       ref={containerRef}
-className="flex flex-col md:flex-row h-[500vh] bg-gradient-to-b from-black  via-indigo-600 to-gray-900"
+className=" w-full flex flex-col md:flex-row h-[500vh] bg-gradient-to-b from-black  via-indigo-600 to-gray-900"
     >
       {/* Left Side */}
       <div className="w-full md:w-full flex flex-col justify-center px-8 md:px-16 py-12 sticky top-0 h-screen">

@@ -1,7 +1,7 @@
 "use client";
 // components/Navbar.js
 import { useState } from 'react';
-import { FaUser } from "react-icons/fa";
+import GoogleSignInButton from '@/components/GoogleSignInButton';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -14,9 +14,9 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center ">
-            <img src="/Logo_vista.png" alt="Logo" className="h-22 py-1 px-4 mt-2"/>
-            
+          <div className="flex items-center" href="/">
+            <img src="/Logo_vista.png" alt="Logo" className="h-22 py-1 px-4 mt-2" onClick={() => window.location.href = "/"}/>
+           
           </div>
 
           {/* Desktop Menu */}
@@ -43,9 +43,9 @@ export default function Navbar() {
             
               <a
                 href="/"
-                className="text-white  rounded-md text-2xl font-bold"
+                className="text-white  rounded-md text-xl"
               >
-               <FaUser />
+               <GoogleSignInButton/>
               </a>
             </div>
           </div>
