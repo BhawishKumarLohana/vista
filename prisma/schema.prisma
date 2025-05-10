@@ -20,7 +20,7 @@ model User {
   email         String        @unique
   password      String        @default("")
   displayName   String?
-  fullName      String
+  full_Name     String   @default("Unknown") // Add a temporary default
   settings      UserSettings?
   portfolio     PortfolioEntry[]
   alerts        Alert[]
