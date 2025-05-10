@@ -181,7 +181,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Admin\\Desktop\\vista\\src\\generated\\prisma",
+      "value": "D:\\DBMS\\vista\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -195,7 +195,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Admin\\Desktop\\vista\\prisma\\schema.prisma",
+    "sourceFilePath": "D:\\DBMS\\vista\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -209,11 +209,12 @@ const config = {
     "db"
   ],
   "activeProvider": "mysql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "mysql://root:YdNPvrJLUwmVAhABZtvfGuzPpkmPlkxM@gondola.proxy.rlwy.net:34966/railway"
+        "value": null
       }
     }
   },
