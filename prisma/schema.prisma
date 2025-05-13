@@ -74,7 +74,7 @@ model PortfolioEntry {
   user     User @relation(fields: [user_id], references: [user_id])
   coin     Coin @relation(fields: [coin_id], references: [coin_id])
 
-  @@unique([user_id, coin_id]) // each user can only have one entry per coin
+  @@unique([user_id, coin_id], name: "userId_coinId") // each user can only have one entry per coin
 }
 
 model TrackRecord {

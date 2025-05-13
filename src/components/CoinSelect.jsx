@@ -11,9 +11,36 @@ function CoinSelect() {
   const [alerts, setAlerts] = useState([]);
   const [showAlerts, setShowAlerts] = useState(false);
 
-  const toggleShowAlerts = () => {
-    setShowAlerts(!showAlerts);
-  };
+const toggleShowAlerts = async () => {
+  const newState = !showAlerts;
+  setShowAlerts(newState);
+
+  if (newState) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Login to view your alerts.");
+      return;
+    }
+
+    const res = await fetch("/api/alerts", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.ok) {
+      const result = await res.json();
+      const mapped = result.alerts.map((alert) => ({
+        selectedCoin: alert.coin.name,
+        action: alert.floor_price !== null ? "buy" : "sell",
+        threshold: alert.floor_price || alert.ceiling_price,
+      }));
+      setAlerts(mapped);
+    } else {
+      console.error("Failed to fetch alerts:", await res.text());
+    }
+  }
+};
 
   useEffect(() => {
     async function fetchCoins() {

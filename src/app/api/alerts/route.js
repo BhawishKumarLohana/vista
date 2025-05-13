@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import prisma from "@/lib/db";
 
-const SECRET = "demo_secret_key"; // match the one in /api/auth
+const SECRET = "demo_secret_key"; // Use env in production
 
 export async function POST(req) {
   const authHeader = req.headers.get("Authorization");
@@ -13,7 +13,7 @@ export async function POST(req) {
 
   let decoded;
   try {
-    decoded = jwt.verify(token, SECRET); // no env used
+    decoded = jwt.verify(token, SECRET);
   } catch {
     return Response.json({ error: "Invalid token" }, { status: 403 });
   }
@@ -38,3 +38,35 @@ export async function POST(req) {
 
   return Response.json(alert, { status: 201 });
 }
+
+export async function GET(req) {
+  const authHeader = req.headers.get("Authorization");
+  const token = authHeader?.split(" ")[1];
+
+  if (!token) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { email } = jwt.verify(token, SECRET);
+
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      return Response.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const alerts = await prisma.alert.findMany({
+      where: { user_id: user.user_id },
+      include: {
+        coin: true, // Include coin name, etc.
+      },
+    });
+
+    return Response.json({ alerts }, { status: 200 });
+  } catch (error) {
+    console.error("Fetch alerts error:", error);
+    return Response.json({ error: "Invalid token or server error" }, { status: 500 });
+  }
+}
+
