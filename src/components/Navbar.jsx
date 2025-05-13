@@ -1,6 +1,6 @@
 "use client";
-// components/Navbar.js
 import { useState } from 'react';
+import  {FaUser} from 'react-icons/fa'
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -14,13 +14,19 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center" href="/">
-            <img src="/Logo_vista.png" alt="Logo" className="h-22 py-1 px-4 mt-2" onClick={() => window.location.href = "/"}/>
+            <img src="/vistalogo-removebg-preview.png" alt="Logo" className="h-22 py-1 px-4 mt-2" onClick={() => window.location.href = "/"}/>
            
           </div>
 
           {/* Desktop Menu */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
+              <a
+                href="/dashboard"
+                className="text-white  hover:bg-yellow-500  px-3 py-2 rounded-md text-2xl font-bold"
+              >
+                DASHBOARD
+              </a>
               <a
                 href="/coins"
                 className="text-white hover:bg-yellow-500 px-3 py-2 rounded-md text-2xl font-bold"
@@ -45,18 +51,13 @@ export default function Navbar() {
               >
                 LOGIN/SIGNUP
               </a>
-              <a
-                href="/dashboard"
-                className="text-white  hover:bg-yellow-500  px-3 py-2 rounded-md text-2xl font-bold"
-              >
-                DASHBOARD
-              </a>
+              
             
               <a
-                href="/"
+                href="/profile"
                 className="text-white  rounded-md text-xl"
               >
-               
+               <FaUser/>
               </a>
             </div>
           </div>
@@ -91,6 +92,7 @@ export default function Navbar() {
       {isOpen && (
         <div className="fixed inset-0 z-50 transition-transform transform translate-x-0 duration-300 ease-in-out lg:hidden">
           <div className="  h-full p-10 flex flex-col space-y-12 shadow-lg">
+            
             <button
               onClick={toggleMenu}
               className="text-[#ffffff] focus:outline-none"
@@ -111,6 +113,11 @@ export default function Navbar() {
                 />
               </svg>
             </button>
+             {/* Logo */}
+          <div className="flex items-center" href="/">
+            <img src="/vistalogo-removebg-preview.png" alt="Logo" className="h-22 py-1 px-4 mt-2" onClick={() => window.location.href = "/"}/>
+           
+          </div>
             <a
               href="/"
               className="hover:text-[#ffffff] transition-colors duration-300 text-2xl font-bold"

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/Input";
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username,setUsername] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,6 +50,13 @@ export default function SignUpPage() {
       <div className="w-full max-w-md">
         <h2 className="text-3xl font-bold text-white text-center mb-6">Create Account</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <Input
+            type="username"
+            placeholder="Enter your username"
+            value={email}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
           <Input
             type="email"
             placeholder="Enter your email"
