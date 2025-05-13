@@ -1,10 +1,7 @@
+import { CoinList } from "./CoinList";
+
 export default function CryptoTable() {
-    const data = [
-      { name: "Bitcoin", symbol: "BTC", price: "$63,500", change: "+2.5%" },
-      { name: "Ethereum", symbol: "ETH", price: "$3,200", change: "-1.3%" },
-      { name: "Solana", symbol: "SOL", price: "$145", change: "+4.1%" },
-      { name: "Cardano", symbol: "ADA", price: "$0.52", change: "+0.8%" },
-    ];
+    const data = CoinList().slice(0,5);
   
     return (
       <div className="w-full px-6 py-12 flex justify-center items-center bg-gradient-to-b from-black via-gray-900 to-gray-950">
@@ -25,9 +22,9 @@ export default function CryptoTable() {
                 </tr>
               </thead>
               <tbody>
-                {data.map((coin, index) => (
+                {data.map((coin) => (
                   <tr
-                    key={index}
+                    key={coin.coin_id}
                     className="hover:bg-purple-900/20 transition-all duration-200 border-b border-gray-800"
                   >
                     <td className="px-6 py-4">{coin.name}</td>
@@ -36,14 +33,14 @@ export default function CryptoTable() {
                     </td>
                     <td className="px-6 py-4">{coin.price}</td>
                     <td
-                      className={`px-6 py-4 font-semibold ${
-                        coin.change.startsWith("+")
-                          ? "text-emerald-400"
-                          : "text-red-400"
-                      }`}
-                    >
-                      {coin.change}
-                    </td>
+                    className={`px-6 py-4 font-semibold ${
+                      coin.percent_change_24h > 0
+                        ? "text-emerald-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {coin.percent_change_24h}%
+                  </td>
                   </tr>
                 ))}
               </tbody>

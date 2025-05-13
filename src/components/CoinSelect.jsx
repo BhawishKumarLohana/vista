@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import {CoinList} from "@/components/CoinList"
 
 function CoinSelect() {
-  const [coins, setCoins] = useState([]);
   const [selectedCoin, setSelectedCoin] = useState("");
   const [action, setAction] = useState("buy");
   const [threshold, setThreshold] = useState("");
   const [alerts, setAlerts] = useState([]);
   const [showAlerts, setShowAlerts] = useState(false);
+  const coins = CoinList();
 
 const toggleShowAlerts = async () => {
   const newState = !showAlerts;
@@ -41,17 +42,6 @@ const toggleShowAlerts = async () => {
     }
   }
 };
-
-  useEffect(() => {
-    async function fetchCoins() {
-      const res = await fetch("/api/coins");
-      const data = await res.json();
-      setCoins(data);
-    }
-
-    fetchCoins();
-  }, []);
-
   const handleSubmit = async () => {
     if (!selectedCoin || !threshold) return;
 
