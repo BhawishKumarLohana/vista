@@ -66,10 +66,10 @@ export default function CoinsTable() {
                   <td className="px-6 py-4">${coin.price}</td>
                   <td
                     className={`px-6 py-4 font-semibold ${
-                      coin.change_24h >= 0 ? "text-emerald-400" : "text-red-400"
+                      coin.percent_change_24h >= 0 ? "text-emerald-400" : "text-red-400"
                     }`}
                   >
-                    {coin.change_24h}%
+                    {coin.percent_change_24h}%
                   </td>
                 </tr>
               ))}
