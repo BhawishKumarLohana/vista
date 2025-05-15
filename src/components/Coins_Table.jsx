@@ -55,10 +55,10 @@ export default function CoinsTable() {
                   className="hover:bg-purple-900/20 transition-all duration-200 border-b border-gray-800"
                 >
                   <td className="px-6 py-4 text-purple-300 hover:underline">
-                    <Link href={`/coin/${coin.id}`}>
-
+                    <Link href={`/coins/${coin.coin_id}`}>
                       {coin.name}
                     </Link>
+
                   </td>
                   <td className="px-6 py-4 text-green-400 font-semibold">
                     {coin.symbol}
