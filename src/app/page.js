@@ -15,6 +15,7 @@ export default function Home() {
       <FeatureCard
         name="Alert System"
         description="Stay informed with real-time alerts for market changes, ensuring you never miss critical updates."
+        className="py-2"
       />
       <FeatureCard
         name="Compare Coins"
