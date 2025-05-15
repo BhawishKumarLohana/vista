@@ -1,6 +1,7 @@
 export default function FeatureCard({name,description}) {
     return (
-        <div className=" bg-gradient-to-b from-gray-900 to to-black py-20 flex justify-center">
+      <div className="py-20">
+        <div className=" bg-gradient-to-b from-gray-900 to to-black flex justify-center">
       <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-2xl shadow-xl overflow-hidden border border-gray-700 backdrop-blur-md ">
         
         {/* Left: Text Content */}
@@ -20,6 +21,7 @@ export default function FeatureCard({name,description}) {
         <div className="w-full md:w-1/2 bg-black/20 flex items-center justify-center p-6">
           {/* Replace below div with Lottie animation or animated SVG */}
           <div className="w-full h-48 bg-gradient-to-tr from-purple-600 via-green-300 to-transparent rounded-xl animate-pulse blur-sm opacity-60" />
+        </div>
         </div>
         </div>
         </div>
