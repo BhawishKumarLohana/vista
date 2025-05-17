@@ -71,9 +71,7 @@ const sendFriendRequest = async (receiverId,senderId) => {
   }
 };
 
-  const viewProfile = (userId) => {
-    router.push(`/profile/${userId}`);
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-950 py-16 px-6 md:px-20 text-white">
@@ -111,13 +109,6 @@ const sendFriendRequest = async (receiverId,senderId) => {
                   <p className="font-semibold text-white">{user.displayName}</p>
                 </div>
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => viewProfile(user.userId)}
-                    className="flex items-center gap-1 bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-md text-sm"
-                  >
-                    <Eye size={16} />
-                    View
-                  </button>
                   <button
                     onClick={() => sendFriendRequest(user.user_id,senderId)}
                     className="flex items-center gap-1 bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded-md text-sm"
