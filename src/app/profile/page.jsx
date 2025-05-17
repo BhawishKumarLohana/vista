@@ -4,14 +4,10 @@ export default function ProfilePage() {
   const friends = ["Alice", "Bhawish", "Devansh"];
   const [isEditing, setIsEditing] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [user, setUser] = useState(null);
 
-  const [username, setUsername] = useState("Bhawish");
   const [description, setDescription] = useState("");
-
-  const [tempUsername, setTempUsername] = useState("");
   const [tempDescription, setTempDescription] = useState("");
-  
- 
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -22,19 +18,28 @@ export default function ProfilePage() {
       return;
     }
 
-    const user = JSON.parse(storedUser);
-    setUsername(user.displayName);
-    setTempUsername(user);
-    setDescription("Web3 enthusiast and builder");
-    setTempDescription("Web3 enthusiast and builder");
+    const fetchUserInfo = async () => {
+      const user = JSON.parse(storedUser);
+      setUser(user);
+      try {
+        const res = await fetch("/api/profile", {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        });
+        const data = await res.json();
+        if (data.user_info) {
+          setDescription(data.user_info);
+          setTempDescription(data.user_info);
+        }
+      } catch (err) {
+        console.error("Failed to load profile info:", err);
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
 
-    fetch("/api/portfolio", {
-      headers: {
-        Authorization: `Bearer ${storedToken}`,
-      },
-    })
-      .then((res) => res.json())
-      .finally(() => setCheckingAuth(false));
+    fetchUserInfo();
   }, []);
 
   if (checkingAuth) {
@@ -58,7 +63,7 @@ export default function ProfilePage() {
           />
 
           <div className="text-center md:text-left md:ml-8 space-y-2">
-            <h1 className="text-3xl font-bold text-purple-400">{username}</h1>
+            <h1 className="text-3xl font-bold text-purple-400">{user?.displayName || "User"}</h1>
             <p className="text-gray-300">{description}</p>
             <button
               onClick={() => setIsEditing(true)}
@@ -75,14 +80,6 @@ export default function ProfilePage() {
             <h3 className="text-lg font-semibold text-purple-300 mb-4">Edit Profile</h3>
 
             <div className="space-y-4">
-              <input
-                type="text"
-                value={tempUsername}
-                onChange={(e) => setTempUsername(e.target.value)}
-                className="w-full p-2 rounded bg-black text-white border border-gray-600 focus:ring-2 focus:ring-purple-500"
-                placeholder="Username"
-              />
-
               <textarea
                 value={tempDescription}
                 onChange={(e) => setTempDescription(e.target.value)}
@@ -93,11 +90,19 @@ export default function ProfilePage() {
 
               <div className="flex gap-4">
                 <button
-                  onClick={() => {
-                    setUsername(tempUsername);
+                  onClick={async () => {
                     setDescription(tempDescription);
                     setIsEditing(false);
-                    // Optionally send to API here
+
+                    const token = localStorage.getItem("token");
+                    await fetch("/api/profile", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({ user_info: tempDescription }),
+                    });
                   }}
                   className="bg-green-600 hover:bg-green-500 px-4 py-2 rounded text-white font-medium"
                 >
@@ -106,7 +111,6 @@ export default function ProfilePage() {
 
                 <button
                   onClick={() => {
-                    setTempUsername(username);
                     setTempDescription(description);
                     setIsEditing(false);
                   }}
@@ -168,4 +172,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
 

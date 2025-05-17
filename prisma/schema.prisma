@@ -26,14 +26,16 @@ model User {
   email         String        @unique
   password      String        @default("")
   displayName   String?
-  full_Name     String   @default("Unknown") // Add a temporary default
-  settings      UserSettings?
-  portfolio     PortfolioEntry[]
-  alerts        Alert[]
-  records       TrackRecord[]
+  full_Name     String        @default("Unknown") // Add a temporary default
+  user_info     String?       // 🆕 Optional field for user bio/info
+
+  settings         UserSettings?
+  portfolio        PortfolioEntry[]
+  alerts           Alert[]
+  records          TrackRecord[]
   sentRequests     FriendRequest[] @relation("SentRequests")
   receivedRequests FriendRequest[] @relation("ReceivedRequests")
-} 
+}
 model UserSettings {
   user_id   Int     @id
   currency  String  @default("USD")
