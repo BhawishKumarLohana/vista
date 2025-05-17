@@ -115,11 +115,6 @@ export default function PortfolioTable({ Ini_data }) {
           ))}
         </tbody>
       </table>
-
-      {/* Action Buttons */}
-      <div className="mt-6 flex justify-between">
-        <Button className="bg-green-600 hover:bg-green-500 text-white">Add Coin</Button>
-      </div>
     </div>
   );
 }

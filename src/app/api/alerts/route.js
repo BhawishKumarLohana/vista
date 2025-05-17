@@ -70,3 +70,32 @@ export async function GET(req) {
   }
 }
 
+export async function DELETE(req) {
+  const authHeader = req.headers.get("Authorization");
+  const token = authHeader?.split(" ")[1];
+  const SECRET = "demo_secret_key";
+
+  if (!token) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { email } = jwt.verify(token, SECRET);
+    const user = await prisma.user.findUnique({ where: { email } });
+    const { alert_id } = await req.json();
+
+    if (!user || !alert_id) {
+      return Response.json({ error: "Invalid request" }, { status: 400 });
+    }
+
+    await prisma.alert.delete({
+      where: { alert_id: alert_id },
+    });
+
+    return Response.json({ message: "Alert deleted" }, { status: 200 });
+  } catch (err) {
+    console.error("Delete alert error:", err);
+    return Response.json({ error: "Failed to delete alert" }, { status: 500 });
+  }
+}
+
