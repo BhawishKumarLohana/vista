@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/Input";
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username,setUsername] = useState("");
+  const [username, setUsername] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!email || !password || !username) return;
 
     try {
       const res = await fetch("/api/auth", {
@@ -20,6 +20,7 @@ export default function SignUpPage() {
         body: JSON.stringify({
           email,
           password,
+          username,
           action: "signup",
         }),
       });
@@ -30,14 +31,13 @@ export default function SignUpPage() {
         return;
       }
 
-      // ✅ Store JWT and user in localStorage
+
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
       alert("Signup successful!");
       console.log("New user:", data.user);
 
-      // ✅ Redirect to dashboard
       window.location.href = "/dashboard";
     } catch (err) {
       console.error("Signup error:", err);
@@ -51,9 +51,9 @@ export default function SignUpPage() {
         <h2 className="text-3xl font-bold text-white text-center mb-6">Create Account</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Input
-            type="username"
+            type="text"
             placeholder="Enter your username"
-            value={email}
+            value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />

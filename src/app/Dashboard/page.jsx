@@ -88,7 +88,7 @@ const fetchPortfolio = async () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-900 py-20 px-20 text-white">
       <h2 className="text-3xl font-bold text-center mb-2 mt-10">
-        Welcome {user?.email || "User"}!
+        Welcome {user?.displayName || "User"}!
       </h2>
 
       <button

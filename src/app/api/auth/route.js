@@ -2,12 +2,13 @@ import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-const SECRET = "demo_secret_key"; // ❌ not secure — just for demo
+const SECRET = "demo_secret_key";
 
 export async function POST(req) {
   try {
-    const { email, password, action } = await req.json();
+    const { email, password, action, username } = await req.json();
 
+    // Basic input validation
     if (!email || !password || !["signup", "login"].includes(action)) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
@@ -19,7 +20,13 @@ export async function POST(req) {
         return NextResponse.json({ error: "User already exists" }, { status: 409 });
       }
 
-      const newUser = await prisma.user.create({ data: { email, password } });
+      const newUser = await prisma.user.create({
+        data: {
+          email,
+          password,
+          displayName: username, 
+        },
+      });
 
       const token = jwt.sign(
         { userId: newUser.user_id, email },
@@ -48,3 +55,4 @@ export async function POST(req) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+
