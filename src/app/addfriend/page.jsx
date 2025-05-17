@@ -2,27 +2,74 @@
 import React, { useState } from "react";
 import { Search, UserPlus, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AddFriendPage() {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const router = useRouter();
+  const [user,setUser] = useState(null);
+ 
+  useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    setUser(JSON.parse(storedUser));
+  }
+    }, []);
+  
+  const senderId = user?.user_id;
+  console.log(senderId);
 
+  
   const handleSearch = async () => {
-    // Replace with real API call
-    const dummyUsers = [
-      { id: 1, name: "Alice Carter", username: "alice" },
-      { id: 2, name: "Bob Tan", username: "bobby" },
-    ];
-    setSearchResults(dummyUsers.filter(u =>
-      u.name.toLowerCase().includes(searchInput.toLowerCase())
-    ));
-  };
+  try {
+    const response = await fetch("/api/getUsers");
+    const data = await response.json();
+    console.log(data);
+    const filtered = data.filter((u) =>
+      u.displayName &&
+      u.displayName.toLowerCase().includes(searchInput.toLowerCase())
+    );
+    setSearchResults(filtered)
 
-  const sendFriendRequest = (userId) => {
-    // Replace with actual friend request logic
-    alert(`Friend request sent to user ID: ${userId}`);
-  };
+   
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
+  }
+};
+
+useEffect(() => {
+  handleSearch();
+  
+}, []);
+
+
+
+const sendFriendRequest = async (receiverId,senderId) => {
+  try {
+    const res = await fetch("/api/friend-request/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        senderId: senderId,  // You must have this in context or props
+        receiverId,
+      }),
+    });
+
+    const result = await res.json();
+
+    if (res.ok) {
+      alert("Friend request sent!");
+    } else {
+      alert(result.message || "Something went wrong.");
+    }
+  } catch (err) {
+    console.error("Error sending friend request:", err);
+    alert("Failed to send request.");
+  }
+};
 
   const viewProfile = (userId) => {
     router.push(`/profile/${userId}`);
@@ -57,12 +104,11 @@ export default function AddFriendPage() {
           <div className="mt-6 space-y-4">
             {searchResults.map((user) => (
               <div
-                key={user.id}
+                key={user.user_id}
                 className="flex justify-between items-center bg-gray-800 px-4 py-3 rounded-md"
               >
                 <div>
-                  <p className="font-semibold text-white">{user.name}</p>
-                  <p className="text-sm text-gray-400">@{user.username}</p>
+                  <p className="font-semibold text-white">{user.displayName}</p>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -73,7 +119,7 @@ export default function AddFriendPage() {
                     View
                   </button>
                   <button
-                    onClick={() => sendFriendRequest(user.id)}
+                    onClick={() => sendFriendRequest(user.user_id,senderId)}
                     className="flex items-center gap-1 bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded-md text-sm"
                   >
                     <UserPlus size={16} />

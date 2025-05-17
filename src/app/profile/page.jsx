@@ -9,6 +9,11 @@ export default function ProfilePage() {
   const [description, setDescription] = useState("");
   const [tempDescription, setTempDescription] = useState("");
 
+  //freindrequestSHow
+  const [searchResults,setSearchResults] = useState("");
+  
+ 
+
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
@@ -17,6 +22,7 @@ export default function ProfilePage() {
       window.location.href = "/login";
       return;
     }
+    
 
     const fetchUserInfo = async () => {
       const user = JSON.parse(storedUser);
@@ -40,7 +46,34 @@ export default function ProfilePage() {
     };
 
     fetchUserInfo();
+    fetch("/api/portfolio", {
+      headers: {
+        Authorization: `Bearer ${storedToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .finally(() => setCheckingAuth(false));
+
+
+      // friend requst show
+      fetch("/api/getFriendReq", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: user.user_id })      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Friend Requests:", data);
+          setSearchResults(data);
+             })
+        .catch((err) => {
+          console.error("Failed to fetch friend requests:", err);
+        });
   }, []);
+
+
+
+
+
 
   if (checkingAuth) {
     return (
@@ -151,6 +184,44 @@ export default function ProfilePage() {
               ))}
             </ul>
           </div>
+          {/* Friend Request Section */}
+          <div className="mt-10 bg-black/30 border border-purple-700 p-6 rounded-xl backdrop-blur-lg">
+              <h2 className="text-xl font-bold text-purple-300 mb-4">Friend Requests</h2>
+
+              {searchResults.length === 0 ? (
+                <p className="text-gray-400">No pending requests.</p>
+              ) : (
+                <ul className="space-y-4">
+                  {searchResults.map((req) => (
+                    <li
+                      key={req.request_id}
+                      className="flex items-center justify-between bg-gray-800/50 p-4 rounded-lg border border-gray-700"
+                    >
+                      <div>
+                        <p className="text-white font-semibold">{req.sender.displayName || "Unnamed"}</p>
+                        <p className="text-gray-400 text-sm">@{req.sender.username}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 text-white rounded-md"
+                          onClick={() => acceptFriendRequest(req.request_id)}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          className="px-4 py-1.5 text-sm bg-red-600 hover:bg-red-500 text-white rounded-md"
+                          onClick={() => rejectFriendRequest(req.request_id)}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            
 
           {/* Activity Log */}
           <div className="bg-black/30 border border-purple-700 p-6 rounded-xl backdrop-blur-lg">
