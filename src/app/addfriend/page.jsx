@@ -1,0 +1,90 @@
+"use client";
+import React, { useState } from "react";
+import { Search, UserPlus, Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+export default function AddFriendPage() {
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const router = useRouter();
+
+  const handleSearch = async () => {
+    // Replace with real API call
+    const dummyUsers = [
+      { id: 1, name: "Alice Carter", username: "alice" },
+      { id: 2, name: "Bob Tan", username: "bobby" },
+    ];
+    setSearchResults(dummyUsers.filter(u =>
+      u.name.toLowerCase().includes(searchInput.toLowerCase())
+    ));
+  };
+
+  const sendFriendRequest = (userId) => {
+    // Replace with actual friend request logic
+    alert(`Friend request sent to user ID: ${userId}`);
+  };
+
+  const viewProfile = (userId) => {
+    router.push(`/profile/${userId}`);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-950 py-16 px-6 md:px-20 text-white">
+      <h2 className="text-4xl font-bold text-center mb-10 mt-20 py-10">Add a Friend</h2>
+
+      <div className="max-w-2xl mx-auto bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-700">
+        <label className="block text-sm font-medium text-purple-300 mb-2">
+          Search by Name or Username
+        </label>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="e.g. alice, bob123"
+            className="w-full bg-black border border-gray-700 text-white rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-purple-600 hover:bg-purple-700 p-3 rounded-md"
+          >
+            <Search className="text-white w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Search Results */}
+        {searchResults.length > 0 && (
+          <div className="mt-6 space-y-4">
+            {searchResults.map((user) => (
+              <div
+                key={user.id}
+                className="flex justify-between items-center bg-gray-800 px-4 py-3 rounded-md"
+              >
+                <div>
+                  <p className="font-semibold text-white">{user.name}</p>
+                  <p className="text-sm text-gray-400">@{user.username}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => viewProfile(user.userId)}
+                    className="flex items-center gap-1 bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-md text-sm"
+                  >
+                    <Eye size={16} />
+                    View
+                  </button>
+                  <button
+                    onClick={() => sendFriendRequest(user.id)}
+                    className="flex items-center gap-1 bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded-md text-sm"
+                  >
+                    <UserPlus size={16} />
+                    Add
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

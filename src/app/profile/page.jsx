@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-
 export default function ProfilePage() {
   const friends = ["Alice", "Bhawish", "Devansh"];
   const [isEditing, setIsEditing] = useState(false);
@@ -11,6 +10,8 @@ export default function ProfilePage() {
 
   const [tempUsername, setTempUsername] = useState("");
   const [tempDescription, setTempDescription] = useState("");
+  
+ 
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -128,7 +129,7 @@ export default function ProfilePage() {
           <div className="bg-black/30 border border-purple-700 p-6 rounded-xl backdrop-blur-lg">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-purple-300">Your Friends</h2>
-              <button className="px-4 py-1 bg-green-600 hover:bg-green-500 rounded-md text-white font-medium text-sm">
+              <button onClick={() => window.location.href = "/addfriend"} className="px-4 py-1 bg-green-600 hover:bg-green-500 rounded-md text-white font-medium text-sm">
                 + Add Friend
               </button>
             </div>
