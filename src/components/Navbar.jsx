@@ -29,7 +29,7 @@ export default function Navbar() {
                 { href: "/coins", label: "COINS" },
                 { href: "/compare", label: "COMPARE" },
                 { href: "/alert", label: "ALERT" },
-                { href: "/login", label: "LOGIN/SIGNUP" },
+                { href: "/login", label: "LOGIN" },
               ].map((item) => (
                 <a
                   key={item.href}
@@ -40,7 +40,7 @@ export default function Navbar() {
                 </a>
               ))}
               <a href="/profile" className="text-white rounded-md text-xl">
-                <FaUser />
+                <FaUser /> 
               </a>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function Navbar() {
               { href: "/coins", label: "COINS" },
               { href: "/compare", label: "COMPARE" },
               { href: "/alert", label: "ALERT" },
-              { href: "/login", label: "LOGIN/SIGNUP" },
+              { href: "/login", label: "LOGIN" },
               { href: "/profile", label: <FaUser /> },
             ].map((item) => (
               <a
