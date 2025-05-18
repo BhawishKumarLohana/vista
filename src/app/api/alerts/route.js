@@ -20,23 +20,34 @@ export async function POST(req) {
 
   const { selectedCoin, action, threshold } = await req.json();
 
-  const coin = await prisma.coin.findFirst({ where: { name: selectedCoin } });
-  const user = await prisma.user.findUnique({ where: { email: decoded.email } });
+  if (!selectedCoin || !action || !threshold) {
+    return Response.json({ error: "Missing required fields" }, { status: 400 });
+  }
+
+  const [coin] = await prisma.$queryRawUnsafe(
+    `SELECT * FROM Coin WHERE name = ? LIMIT 1`,
+    selectedCoin
+  );
+
+  const [user] = await prisma.$queryRawUnsafe(
+    `SELECT * FROM User WHERE email = ? LIMIT 1`,
+    decoded.email
+  );
 
   if (!coin || !user) {
     return Response.json({ error: "Invalid user or coin" }, { status: 404 });
   }
 
-  const alert = await prisma.alert.create({
-    data: {
-      user_id: user.user_id,
-      coin_id: coin.coin_id,
-      floor_price: action === "buy" ? parseFloat(threshold) : null,
-      ceiling_price: action === "sell" ? parseFloat(threshold) : null,
-    },
-  });
+  await prisma.$executeRawUnsafe(
+    `INSERT INTO Alert (user_id, coin_id, floor_price, ceiling_price)
+     VALUES (?, ?, ?, ?)`,
+    user.user_id,
+    coin.coin_id,
+    action === "buy" ? parseFloat(threshold) : null,
+    action === "sell" ? parseFloat(threshold) : null
+  );
 
-  return Response.json(alert, { status: 201 });
+  return Response.json({ message: "Alert created successfully" }, { status: 201 });
 }
 
 export async function GET(req) {
@@ -50,22 +61,40 @@ export async function GET(req) {
   try {
     const { email } = jwt.verify(token, SECRET);
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const [user] = await prisma.$queryRawUnsafe(
+      `SELECT * FROM User WHERE email = ? LIMIT 1`,
+      email
+    );
 
     if (!user) {
       return Response.json({ error: "User not found" }, { status: 404 });
     }
 
-    const alerts = await prisma.alert.findMany({
-      where: { user_id: user.user_id },
-      include: {
-        coin: true, // Include coin name, etc.
-      },
-    });
+    const rawAlerts = await prisma.$queryRawUnsafe(`
+        SELECT a.alert_id, a.floor_price, a.ceiling_price,
+              c.coin_id, c.name, c.symbol, c.slug
+        FROM Alert a
+        JOIN Coin c ON a.coin_id = c.coin_id
+        WHERE a.user_id = ?
+      `, user.user_id);
+
+      // Now we do this to map things we get to the frontend so that we have a good working flow
+      const alerts = rawAlerts.map(a => ({
+        alert_id: a.alert_id,
+        floor_price: a.floor_price,
+        ceiling_price: a.ceiling_price,
+        coin: {
+          coin_id: a.coin_id,
+          name: a.name,
+          symbol: a.symbol,
+          slug: a.slug,
+        },
+      }));
+
 
     return Response.json({ alerts }, { status: 200 });
-  } catch (error) {
-    console.error("Fetch alerts error:", error);
+  } catch (err) {
+    console.error("Fetch alerts error:", err);
     return Response.json({ error: "Invalid token or server error" }, { status: 500 });
   }
 }
@@ -73,7 +102,6 @@ export async function GET(req) {
 export async function DELETE(req) {
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.split(" ")[1];
-  const SECRET = "demo_secret_key";
 
   if (!token) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -81,16 +109,26 @@ export async function DELETE(req) {
 
   try {
     const { email } = jwt.verify(token, SECRET);
-    const user = await prisma.user.findUnique({ where: { email } });
     const { alert_id } = await req.json();
 
-    if (!user || !alert_id) {
-      return Response.json({ error: "Invalid request" }, { status: 400 });
+    if (!alert_id) {
+      return Response.json({ error: "Missing alert ID" }, { status: 400 });
     }
 
-    await prisma.alert.delete({
-      where: { alert_id: alert_id },
-    });
+    const [user] = await prisma.$queryRawUnsafe(
+      `SELECT * FROM User WHERE email = ? LIMIT 1`,
+      email
+    );
+
+    if (!user) {
+      return Response.json({ error: "User not found" }, { status: 404 });
+    }
+
+    await prisma.$executeRawUnsafe(
+      `DELETE FROM Alert WHERE alert_id = ? AND user_id = ?`,
+      alert_id,
+      user.user_id
+    );
 
     return Response.json({ message: "Alert deleted" }, { status: 200 });
   } catch (err) {
