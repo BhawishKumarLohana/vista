@@ -11,24 +11,29 @@ export default function Home() {
 
 
       <Table />
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-20 py-20 px-20">
 
             <FeatureCard
         name="Alert System"
         description="Stay informed with real-time alerts for market changes, ensuring you never miss critical updates."
-        className="my-6"
+        feature={"alert"}
+        className=""
       />
 
       <FeatureCard
         name="Compare Coins"
         description="Easily compare multiple cryptocurrencies side-by-side to analyze performance, trends, and market data."
-        className="my-6"
+        className=""
+        feature={"compare"}
       />
 
       <FeatureCard
         name="Make Friends"
         description="Connect with fellow crypto enthusiasts — share insights, follow trends, and see what the community is up to. It's your social hub for the crypto world!"
-        className="my-6"
+        className="" 
+        feature={"profile"}
       />
+      </div>
 
 
 
