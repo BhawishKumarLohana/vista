@@ -10,25 +10,32 @@ export async function POST(req) {
     return NextResponse.json({ error: "Invalid IDs" }, { status: 400 });
   }
 
-  const existing = await prisma.FriendRequest.findFirst({
-    where: {
-      OR: [
-        { sender_id: senderId, receiver_id: receiverId },
-        { sender_id: receiverId, receiver_id: senderId },
-      ],
-    },
-  });
+  // Check if friend request already exists (both directions)
+  const existing = await prisma.$queryRawUnsafe(
+    `
+    SELECT request_id FROM FriendRequest
+    WHERE (sender_id = ? AND receiver_id = ?)
+       OR (sender_id = ? AND receiver_id = ?)
+    LIMIT 1
+    `,
+    senderId, receiverId, receiverId, senderId
+  );
 
-  if (existing) {
+  if (existing.length > 0) {
     return NextResponse.json({ message: "Friend request already exists." }, { status: 409 });
   }
 
-  const request = await prisma.FriendRequest.create({
-    data: {
-      sender_id: senderId,
-      receiver_id: receiverId,
-    },
-  });
+  // Create new friend request
+  const result = await prisma.$executeRawUnsafe(
+    `
+    INSERT INTO FriendRequest (sender_id, receiver_id)
+    VALUES (?, ?)
+    `,
+    senderId, receiverId
+  );
 
-  return NextResponse.json({ message: "Friend request sent.", request });
+  return NextResponse.json({
+    message: "Friend request sent.",
+    request: { sender_id: senderId, receiver_id: receiverId },
+  });
 }

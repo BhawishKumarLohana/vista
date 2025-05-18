@@ -5,14 +5,13 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const users = await prisma.user.findMany({
-      select: {
-        user_id: true,
-        displayName: true,
-      },
-    });
+    const users = await prisma.$queryRawUnsafe(`
+      SELECT user_id, displayName FROM User
+    `);
+
     return NextResponse.json(users);
   } catch (err) {
+    console.error("User fetch error:", err);
     return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
   }
 }

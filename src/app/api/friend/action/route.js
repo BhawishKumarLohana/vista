@@ -10,18 +10,25 @@ export async function POST(req) {
     const { request_id, action } = await req.json();
 
     if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const decoded = jwt.verify(token, SECRET);
 
     if (!request_id || !["accept", "reject"].includes(action)) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
-    const updated = await prisma.friendRequest.update({
-      where: { request_id },
-      data: { status: action === "accept" ? "accepted" : "declined" },
-    });
+    const newStatus = action === "accept" ? "accepted" : "declined";
 
-    return NextResponse.json({ success: true, updated });
+    const result = await prisma.$executeRawUnsafe(
+      `UPDATE FriendRequest SET status = ? WHERE request_id = ?`,
+      newStatus,
+      request_id
+    );
+
+    return NextResponse.json({
+      success: true,
+      updated: { request_id, status: newStatus, affectedRows: result },
+    });
   } catch (err) {
     console.error("Friend request update error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
@@ -34,23 +41,30 @@ export async function DELETE(req) {
     const { userIdToRemove } = await req.json();
 
     if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const decoded = jwt.verify(token, SECRET);
     const currentUserId = decoded.userId;
 
-    const deleted = await prisma.friendRequest.deleteMany({
-      where: {
-        status: "accepted",
-        OR: [
-          { sender_id: currentUserId, receiver_id: userIdToRemove },
-          { sender_id: userIdToRemove, receiver_id: currentUserId },
-        ],
-      },
-    });
+    const result = await prisma.$executeRawUnsafe(
+      `DELETE FROM FriendRequest
+       WHERE status = 'accepted'
+         AND (
+           (sender_id = ? AND receiver_id = ?)
+           OR
+           (sender_id = ? AND receiver_id = ?)
+         )`,
+      currentUserId,
+      userIdToRemove,
+      userIdToRemove,
+      currentUserId
+    );
 
-    return NextResponse.json({ success: true, deleted });
+    return NextResponse.json({
+      success: true,
+      deleted: { affectedRows: result },
+    });
   } catch (err) {
     console.error("Remove friend error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
-

@@ -8,31 +8,35 @@ export async function GET(req) {
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.split(" ")[1];
 
-  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const { userId } = jwt.verify(token, SECRET);
 
-    const friends = await prisma.friendRequest.findMany({
-      where: {
-        status: "accepted",
-        OR: [
-          { sender_id: userId },
-          { receiver_id: userId }
-        ]
-      },
-      include: {
-        sender: true,
-        receiver: true
-      }
-    });
+    const results = await prisma.$queryRawUnsafe(`
+      SELECT 
+        fr.sender_id,
+        fr.receiver_id,
+        s.user_id AS sender_user_id,
+        s.displayName AS sender_displayName,
+        s.email AS sender_email,
+        r.user_id AS receiver_user_id,
+        r.displayName AS receiver_displayName,
+        r.email AS receiver_email
+      FROM FriendRequest fr
+      JOIN User s ON fr.sender_id = s.user_id
+      JOIN User r ON fr.receiver_id = r.user_id
+      WHERE fr.status = 'accepted' AND (fr.sender_id = ? OR fr.receiver_id = ?)
+    `, userId, userId);
 
-    const friendList = friends.map(req => {
-      const friend = req.sender_id === userId ? req.receiver : req.sender;
+    const friendList = results.map((fr) => {
+      const isSender = fr.sender_id === userId;
       return {
-        user_id: friend.user_id,
-        displayName: friend.displayName,
-        email: friend.email
+        user_id: isSender ? fr.receiver_user_id : fr.sender_user_id,
+        displayName: isSender ? fr.receiver_displayName : fr.sender_displayName,
+        email: isSender ? fr.receiver_email : fr.sender_email,
       };
     });
 
