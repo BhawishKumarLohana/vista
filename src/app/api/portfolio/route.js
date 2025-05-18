@@ -2,9 +2,9 @@ import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-const SECRET = "demo_secret_key"; 
+const SECRET = "demo_secret_key";
 
-// ✅ GET: Fetch user's portfolio
+// ✅ GET: Fetch user's portfolio with nested coin object
 export async function GET(req) {
   const authHeader = req.headers.get("authorization");
 
@@ -17,12 +17,32 @@ export async function GET(req) {
   try {
     const { userId } = jwt.verify(token, SECRET);
 
-    const entries = await prisma.portfolioEntry.findMany({
-      where: { user_id: userId },
-      include: {
-        coin: true, // includes coin name, price, etc.
+    const rawEntries = await prisma.$queryRawUnsafe(
+      `
+      SELECT 
+        p.entry_id, p.amount, 
+        c.coin_id, c.name, c.symbol, c.slug, c.price, 
+        c.percent_change_24h, c.market_cap
+      FROM PortfolioEntry p
+      JOIN Coin c ON p.coin_id = c.coin_id
+      WHERE p.user_id = ?
+      `,
+      userId
+    );
+
+    const entries = rawEntries.map((e) => ({
+      entry_id: e.entry_id,
+      amount: e.amount,
+      coin: {
+        coin_id: e.coin_id,
+        name: e.name,
+        symbol: e.symbol,
+        slug: e.slug,
+        price: e.price,
+        percent_change_24h: e.percent_change_24h,
+        market_cap: e.market_cap,
       },
-    });
+    }));
 
     return NextResponse.json({ entries }, { status: 200 });
   } catch (err) {
@@ -49,24 +69,62 @@ export async function POST(req) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const entry = await prisma.portfolioEntry.upsert({
-      where: {
-        userId_coinId: { 
-          user_id: userId,
-          coin_id: coin_id,
-        },
-      },
-      update: {
-        amount: {
-          increment: amount,
-        },
-      },
-      create: {
+    // 🔍 Check if entry already exists
+    const [existing] = await prisma.$queryRawUnsafe(
+      `
+      SELECT entry_id, amount FROM PortfolioEntry
+      WHERE user_id = ? AND coin_id = ? LIMIT 1
+      `,
+      userId,
+      coin_id
+    );
+
+    let entry;
+
+    if (existing) {
+      // 🔁 Update
+      await prisma.$executeRawUnsafe(
+        `
+        UPDATE PortfolioEntry
+        SET amount = amount + ?
+        WHERE user_id = ? AND coin_id = ?
+        `,
+        amount,
+        userId,
+        coin_id
+      );
+
+      entry = {
+        entry_id: existing.entry_id,
         user_id: userId,
-        coin_id: coin_id,
-        amount: amount,
-      },
-    });
+        coin_id,
+        amount: existing.amount + amount,
+      };
+    } else {
+      // ➕ Insert
+      await prisma.$executeRawUnsafe(
+        `
+        INSERT INTO PortfolioEntry (user_id, coin_id, amount)
+        VALUES (?, ?, ?)
+        `,
+        userId,
+        coin_id,
+        amount
+      );
+
+      // Optionally return inserted entry (e.g., fetch again)
+      const [newEntry] = await prisma.$queryRawUnsafe(
+        `
+        SELECT * FROM PortfolioEntry
+        WHERE user_id = ? AND coin_id = ?
+        ORDER BY entry_id DESC LIMIT 1
+        `,
+        userId,
+        coin_id
+      );
+
+      entry = newEntry;
+    }
 
     return NextResponse.json({ entry }, { status: 200 });
   } catch (err) {
@@ -74,4 +132,3 @@ export async function POST(req) {
     return NextResponse.json({ error: "Invalid token or server error" }, { status: 500 });
   }
 }
-

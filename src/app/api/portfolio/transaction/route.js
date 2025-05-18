@@ -19,80 +19,81 @@ export async function POST(req) {
       return Response.json({ error: "Missing or invalid input" }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    const coin = await prisma.coin.findFirst({ where: { name: selectedCoin } });
+    // 🔍 Get user
+    const [user] = await prisma.$queryRawUnsafe(
+      `SELECT user_id FROM User WHERE email = ? LIMIT 1`,
+      email
+    );
+
+    // 🔍 Get coin
+    const [coin] = await prisma.$queryRawUnsafe(
+      `SELECT coin_id FROM Coin WHERE name = ? LIMIT 1`,
+      selectedCoin
+    );
 
     if (!user || !coin) {
       return Response.json({ error: "Invalid user or coin" }, { status: 404 });
     }
 
-    const existingEntry = await prisma.portfolioEntry.findUnique({
-      where: {
-        userId_coinId: {
-          user_id: user.user_id,
-          coin_id: coin.coin_id,
-        },
-      },
-    });
+    const userId = user.user_id;
+    const coinId = coin.coin_id;
+
+    // 🔍 Check existing portfolio entry
+    const [existingEntry] = await prisma.$queryRawUnsafe(
+      `SELECT amount FROM PortfolioEntry WHERE user_id = ? AND coin_id = ? LIMIT 1`,
+      userId,
+      coinId
+    );
 
     if (action === "buy") {
-      await prisma.portfolioEntry.upsert({
-        where: {
-          userId_coinId: {
-            user_id: user.user_id,
-            coin_id: coin.coin_id,
-          },
-        },
-        update: {
-          amount: {
-            increment: amount,
-          },
-        },
-        create: {
-          user_id: user.user_id,
-          coin_id: coin.coin_id,
-          amount: amount,
-        },
-      });
+      if (existingEntry) {
+        // 🔁 Update (increment amount)
+        await prisma.$executeRawUnsafe(
+          `UPDATE PortfolioEntry SET amount = amount + ? WHERE user_id = ? AND coin_id = ?`,
+          amount,
+          userId,
+          coinId
+        );
+      } else {
+        // ➕ Insert
+        await prisma.$executeRawUnsafe(
+          `INSERT INTO PortfolioEntry (user_id, coin_id, amount) VALUES (?, ?, ?)`,
+          userId,
+          coinId,
+          amount
+        );
+      }
     } else if (action === "sell") {
       if (!existingEntry) {
         return Response.json({ error: "You don't own this coin." }, { status: 400 });
       }
 
       const newAmount = existingEntry.amount - amount;
+
       if (newAmount > 0) {
-        await prisma.portfolioEntry.update({
-          where: {
-            userId_coinId: {
-              user_id: user.user_id,
-              coin_id: coin.coin_id,
-            },
-          },
-          data: {
-            amount: newAmount,
-          },
-        });
+        await prisma.$executeRawUnsafe(
+          `UPDATE PortfolioEntry SET amount = ? WHERE user_id = ? AND coin_id = ?`,
+          newAmount,
+          userId,
+          coinId
+        );
       } else {
-        await prisma.portfolioEntry.delete({
-          where: {
-            userId_coinId: {
-              user_id: user.user_id,
-              coin_id: coin.coin_id,
-            },
-          },
-        });
+        await prisma.$executeRawUnsafe(
+          `DELETE FROM PortfolioEntry WHERE user_id = ? AND coin_id = ?`,
+          userId,
+          coinId
+        );
       }
     }
 
-    // ✅ Add record to TrackRecord
-    await prisma.trackRecord.create({
-      data: {
-        user_id: user.user_id,
-        coin_id: coin.coin_id,
-        amount: amount,
-        action: action,
-      },
-    });
+    // 🧾 Log transaction
+    await prisma.$executeRawUnsafe(
+      `INSERT INTO TrackRecord (user_id, coin_id, amount, action) VALUES (?, ?, ?, ?)`,
+      userId,
+      coinId,
+      amount,
+      action
+    );
 
     return Response.json({ message: "Transaction complete." }, { status: 200 });
   } catch (err) {
