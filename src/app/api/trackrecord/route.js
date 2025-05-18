@@ -14,11 +14,40 @@ export async function GET(req) {
   try {
     const { userId } = jwt.verify(token, SECRET);
 
-    const records = await prisma.trackRecord.findMany({
-      where: { user_id: userId },
-      orderBy: { datetime: "desc" },
-      include: { coin: true },
-    });
+    const rawRecords = await prisma.$queryRawUnsafe(
+      `
+      SELECT 
+        tr.track_record_id,
+        tr.amount,
+        tr.action,
+        tr.datetime,
+        c.coin_id,
+        c.name,
+        c.symbol,
+        c.price,
+        c.percent_change_24h
+      FROM TrackRecord tr
+      JOIN Coin c ON tr.coin_id = c.coin_id
+      WHERE tr.user_id = ?
+      ORDER BY tr.datetime DESC
+      `,
+      userId
+    );
+
+    // ⏎ Structure coin data into a nested object
+    const records = rawRecords.map((r) => ({
+      track_record_id: r.track_record_id,
+      amount: r.amount,
+      action: r.action,
+      datetime: r.datetime,
+      coin: {
+        coin_id: r.coin_id,
+        name: r.name,
+        symbol: r.symbol,
+        price: r.price,
+        percent_change_24h: r.percent_change_24h,
+      },
+    }));
 
     return NextResponse.json(records); // ✅ return as array directly
   } catch (err) {
@@ -26,3 +55,4 @@ export async function GET(req) {
     return NextResponse.json({ error: "Invalid token or internal error" }, { status: 500 });
   }
 }
+

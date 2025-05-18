@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 
 const SECRET = "demo_secret_key";
 
+// ✅ GET: Fetch user_info
 export async function GET(req) {
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.split(" ")[1];
@@ -14,12 +15,15 @@ export async function GET(req) {
 
   try {
     const { userId } = jwt.verify(token, SECRET);
-    const user = await prisma.user.findUnique({
-      where: { user_id: userId },
-      select: {
-        user_info: true,
-      },
-    });
+
+    const [user] = await prisma.$queryRawUnsafe(
+      `SELECT user_info FROM User WHERE user_id = ? LIMIT 1`,
+      userId
+    );
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
     return NextResponse.json(user, { status: 200 });
   } catch (err) {
@@ -28,6 +32,7 @@ export async function GET(req) {
   }
 }
 
+// ✅ POST: Update user_info
 export async function POST(req) {
   const authHeader = req.headers.get("Authorization");
   const token = authHeader?.split(" ")[1];
@@ -44,15 +49,15 @@ export async function POST(req) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { user_id: userId },
-      data: { user_info },
-    });
+    const result = await prisma.$executeRawUnsafe(
+      `UPDATE User SET user_info = ? WHERE user_id = ?`,
+      user_info,
+      userId
+    );
 
-    return NextResponse.json({ user: updatedUser }, { status: 200 });
+    return NextResponse.json({ success: true, updatedRows: result }, { status: 200 });
   } catch (err) {
     console.error("Update user_info error:", err);
     return NextResponse.json({ error: "Failed to update user_info" }, { status: 500 });
   }
 }
-
