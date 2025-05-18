@@ -146,7 +146,7 @@ CREATE INDEX "FriendRequest_receiver_id_fkey" ON "FriendRequest"("receiver_id");
 CREATE INDEX "FriendRequest_sender_id_fkey" ON "FriendRequest"("sender_id");
 
 */
-
+// prisma corresponding
 
 
 enum FriendRequestStatus {
