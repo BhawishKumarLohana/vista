@@ -4,7 +4,7 @@ export default function CryptoTable() {
     const data = CoinList().slice(0,5);
   
     return (
-      <div className="w-full px-6 py-12 flex justify-center items-center bg-gradient-to-b from-black via-gray-900 to-gray-950">
+      <div className="w-full px-6 py-12 flex justify-center items-center my-5 px-10 py-10">
         <div className="w-full max-w-5xl bg-gradient-to-br from-gray-800 via-black to-gray-900 border border-gray-700 rounded-2xl shadow-lg backdrop-blur-md overflow-hidden">
           <div className="px-8 py-6 border-b border-gray-700">
             <h2 className="text-2xl md:text-3xl font-bold text-purple-400 font-mono">

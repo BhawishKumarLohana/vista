@@ -12,19 +12,25 @@ export default function Home() {
 
       <Table />
 
-      <FeatureCard
+            <FeatureCard
         name="Alert System"
         description="Stay informed with real-time alerts for market changes, ensuring you never miss critical updates."
-        className="py-2"
+        className="my-6"
       />
+
       <FeatureCard
         name="Compare Coins"
         description="Easily compare multiple cryptocurrencies side-by-side to analyze performance, trends, and market data."
+        className="my-6"
       />
+
       <FeatureCard
-        name="AI Predictions"
-        description="Leverage advanced AI algorithms to forecast market trends and make data-driven investment decisions."
+        name="Make Friends"
+        description="Connect with fellow crypto enthusiasts — share insights, follow trends, and see what the community is up to. It's your social hub for the crypto world!"
+        className="my-6"
       />
+
+
 
       <Footer />
     </div>

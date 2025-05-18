@@ -157,7 +157,7 @@ const fetchPortfolio = async () => {
       </div>
 
       <PortfolioPieChart data={data} />
-      <PortfolioTable Ini_data={data} />
+      {/*<PortfolioTable Ini_data={data} />*/}
     </div>
   );
 }
