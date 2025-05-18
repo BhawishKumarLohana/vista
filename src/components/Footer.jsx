@@ -1,7 +1,7 @@
 "use client"
 export default function Footer() {
     return (
-      <footer className="bg-gradient-to-r from-black via-gray-900 to-black  text-gray-300 font-mono">
+      <footer className="bg-gradient-to-r from-black via-gray-900 to-black  text-gray-300 font-mono py-10 px-1 ">
         <div className=" sticky bottom-0 items-center justify-between ">
           {/* Logo or App Name */}
           <div className="text-2xl font-bold text-purple-400">

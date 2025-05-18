@@ -33,7 +33,7 @@ export default function FeatureCard({ name, description, className = "", feature
 
         {/* Animated Orb */}
         <motion.div
-          className="w-24 h-24 bg-gradient-to-tr from-purple-600 via-green-300 to-transparent rounded-full blur-sm opacity-60"
+          className="w-24 h-24 bg-gradient-to-tr from-purple-600 via-green-300 to-transparent rounded-full blur-sm opacity-60 hidden md:block"
           animate={{ scale: [1, 1.1, 1], rotate: [0, 15, -10, 0] }}
           transition={{ duration: 3, repeat: Infinity }}
         />
