@@ -8,15 +8,13 @@ export async function POST(req) {
     return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
   }
 
-  const requests = await prisma.friendRequest.findMany({
-    where: {
-      receiver_id: user_id,
-      status: "pending",
-    },
-    include: {
-      sender: true,
-    },
-  });
+  const requests = await prisma.$queryRawUnsafe(
+    `SELECT fr.*, u.user_id AS sender_id, u.displayName 
+     FROM FriendRequest fr
+     JOIN User u ON fr.sender_id = u.user_id
+     WHERE fr.receiver_id = ? AND fr.status = 'pending'`,
+    user_id
+  );
 
   return NextResponse.json(requests);
 }
