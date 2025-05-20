@@ -1,50 +1,48 @@
-const { faker } = require('@faker-js/faker');  // Make sure you're using the correct version of the faker package
-const { PrismaClient } = require('@prisma/client');  // Prisma Client for database interaction
+const { faker } = require('@faker-js/faker');
+const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient();  // Initialize Prisma Client
+const prisma = new PrismaClient();
 
-// Function to generate fake users
 async function generateFakeUsers(numUsers) {
   const users = [];
 
   for (let i = 0; i < numUsers; i++) {
+    const fullName = faker.person.fullName();
+    const firstName = fullName.split(' ')[0];  // Extract first name
+
     const user = {
-      full_Name: faker.person.fullName(),
+      full_Name: fullName,
       email: faker.internet.email(),
       password: faker.internet.password(),
-      displayName: faker.person.firstName() // optional field
+      displayName: firstName,  // Use first name from full name
     };
+
     users.push(user);
   }
 
   return users;
 }
 
-
-// Function to save fake users to the database
 async function saveUsersToDatabase(users) {
   for (const user of users) {
     try {
       await prisma.user.create({
-        data: user
+        data: user,
       });
-      console.log(`✅ User ${user.username} saved.`);
+      console.log(`✅ User ${user.email} saved.`);
     } catch (err) {
-      console.error(`❌ Error saving user ${user.username}:`, err.message);
+      console.error(`❌ Error saving user ${user.email}:`, err.message);
     }
   }
 }
 
 async function main() {
-  const numUsers = 10;  // Number of fake users to generate
-  const fakeUsers = await generateFakeUsers(numUsers);  // Generate fake users
-  await saveUsersToDatabase(fakeUsers);  // Save them to the database
-
-  // Disconnect Prisma client
+  const numUsers = 50000;
+  const fakeUsers = await generateFakeUsers(numUsers);
+  await saveUsersToDatabase(fakeUsers);
   await prisma.$disconnect();
 }
 
-// Call the main function
 main().catch((err) => {
   console.error("❌ Error:", err.message);
   prisma.$disconnect();
