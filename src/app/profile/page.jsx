@@ -239,21 +239,30 @@ export default function ProfilePage() {
               </ul>
             )}
           </div>
+          {/**Activity Log*/}
 
           <div className="bg-black/30 border border-purple-700 p-6 rounded-xl backdrop-blur-lg">
             <h2 className="text-xl font-bold text-purple-300 mb-4">Activity Log</h2>
-            <ul className="space-y-3">
-              {activityLog.length === 0 ? (
-                <li className="text-gray-400">No recent activity.</li>
-              ) : (
-                activityLog.map((log) => (
-                  <li key={log.track_record_id} className="bg-gray-800/40 p-3 rounded-md border border-gray-700">
-                    📝 {log.action.toUpperCase()} {log.amount} of {log.coin.symbol} on {new Date(log.datetime).toLocaleString()}
-                  </li>
-                ))
-              )}
-            </ul>
+            <div className="max-h-72 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-purple-700 scrollbar-track-gray-800">
+              <ul className="space-y-3">
+                {activityLog.length === 0 ? (
+                  <li className="text-gray-400">No recent activity.</li>
+                ) : (
+                  activityLog.map((log) => (
+                    <li
+                      key={log.track_record_id}
+                      className="bg-gray-800/40 p-3 rounded-md border border-gray-700"
+                    >
+                      {log.action.toUpperCase()} {log.amount} of {log.coin.symbol} on{" "}
+                      {new Date(log.datetime).toLocaleString()}
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
           </div>
+
+
         </div>
       </div>
     </div>
