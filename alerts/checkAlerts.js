@@ -17,7 +17,7 @@ async function checkAlertsAndNotify() {
     const ceiling = alert.ceiling_price;
 
     if (floor && currentPrice <= floor) {
-      const message = `📉 ${alert.coin.name} (${alert.coin.symbol}) has dropped to your floor price alert!
+      const message = ` ${alert.coin.name} (${alert.coin.symbol}) has dropped to your floor price alert!
 
 Current Price: $${currentPrice}
 Floor Price: $${floor}
@@ -50,14 +50,14 @@ Ceiling Price: $${ceiling}
       );
 
       if (success) {
-        console.log(`📧 Sell alert sent to ${alert.user.email}`);
+        console.log(` Sell alert sent to ${alert.user.email}`);
       }
     }
   }
 }
 
 cron.schedule('0 8 * * *', async () => {
-  console.log('⏰ Running daily alert check at 8:00 AM');
+  console.log(' Running daily alert check at 8:00 AM');
   await checkAlertsAndNotify();
 });
 
