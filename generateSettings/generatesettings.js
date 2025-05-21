@@ -22,13 +22,13 @@ async function assignUserSettings() {
             dark_mode: darkMode,
           },
         });
-        console.log(`✅ Created settings for user ${user.user_id}: currency USD, dark_mode ${darkMode}`);
+        console.log(`Created settings for user ${user.user_id}: currency USD, dark_mode ${darkMode}`);
       } else {
-        console.log(`ℹ️ Settings already exist for user ${user.user_id}, skipping...`);
+        console.log(`ℹSettings already exist for user ${user.user_id}, skipping...`);
       }
     }
   } catch (err) {
-    console.error('❌ Error assigning user settings:', err.message);
+    console.error(' Error assigning user settings:', err.message);
   } finally {
     await prisma.$disconnect();
   }

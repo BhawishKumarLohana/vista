@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-require('dotenv').config(); // Load env variables
+require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -19,10 +19,10 @@ async function sendAlertEmail(to, subject, text) {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent to ${to}`);
+    console.log(` Email sent to ${to}`);
     return true;
   } catch (error) {
-    console.error(`❌ Failed to send email to ${to}:`, error);
+    console.error(` Failed to send email to ${to}:`, error);
     return false;
   }
 }

@@ -1,14 +1,8 @@
 const axios = require('axios');
 const { PrismaClient } = require('@prisma/client');
-
-// Initialize Prisma Client
 const prisma = new PrismaClient();
-
-// API key directly in the script
 const API_KEY = 'd7d7ed92-da9d-45c2-a2be-dbb97f1ee5ee'; 
 const url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest';
-
-// Set up headers with your API key
 const headers = {
   'X-CMC_PRO_API_KEY': API_KEY,
   Accept: 'application/json'
@@ -22,12 +16,10 @@ const params = {
 
 async function fetchAndSaveCoins() {
   try {
-    // Fetch data from CoinMarketCap API
     const res = await axios.get(url, { headers, params });
     const coins = res.data.data;
     console.log(coins);
 
-    // Process each coin
     for (const coin of coins) {
       const {
         name,
@@ -40,7 +32,6 @@ async function fetchAndSaveCoins() {
 
       const usd = quote.USD;
 
-      // Upsert the coin data into the database
       await prisma.coin.upsert({
         where: { symbol },
         update: {
@@ -68,7 +59,7 @@ async function fetchAndSaveCoins() {
         }
       });
 
-      console.log(`✅ ${name} (${symbol}) saved.`);
+      console.log(` ${name} (${symbol}) saved.`);
     }
 
     console.log('🎉 All coins processed.');

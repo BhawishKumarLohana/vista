@@ -62,9 +62,9 @@ async function createFriendRequestsForAllUsers() {
       console.log(` Final batch inserted`);
     }
 
-    console.log('✅ Finished creating friend requests for all users.');
+    console.log(' Finished creating friend requests for all users.');
   } catch (err) {
-    console.error('❌ Error creating friend requests:', err.message);
+    console.error('Error creating friend requests:', err.message);
   } finally {
     await prisma.$disconnect();
   }

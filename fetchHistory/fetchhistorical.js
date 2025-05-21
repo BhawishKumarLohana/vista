@@ -12,7 +12,7 @@ async function fetchAndSaveHistorical(coinSymbol, coinId) {
       params: {
         fsym: coinSymbol,
         tsym: 'USD',
-        limit: 2000, //can change to 2000
+        limit: 2000, 
         api_key: API_KEY,
       },
     });
@@ -34,9 +34,9 @@ async function fetchAndSaveHistorical(coinSymbol, coinId) {
       });
     }
 
-    console.log(`✅ Historical data for ${coinSymbol} saved.`);
+    console.log(`Historical data for ${coinSymbol} saved.`);
   } catch (err) {
-    console.error(`❌ Error fetching data for ${coinSymbol}:`, err.message);
+    console.error(` Error fetching data for ${coinSymbol}:`, err.message);
   }
 }
 
