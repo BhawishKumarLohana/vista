@@ -2,7 +2,7 @@ import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-const SECRET = "demo_secret_key"; // Use env in production
+const SECRET = "demo_secret_key";
 
 export async function POST(req) {
   try {

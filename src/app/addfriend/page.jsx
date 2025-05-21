@@ -58,7 +58,8 @@ const sendFriendRequest = async (receiverId,senderId) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        senderId: senderId,  // You must have this in context or props
+        senderId: senderId,  
+        
         receiverId,
       }),
     });

@@ -29,14 +29,12 @@ export default function LoginPage() {
         return;
       }
 
-      // ✅ Store the token and user in localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
       alert("Login successful!");
       console.log("Logged in user:", data.user);
 
-      // ✅ Redirect to dashboard
       window.location.href = "/dashboard";
     } catch (err) {
       console.error("Login error:", err);

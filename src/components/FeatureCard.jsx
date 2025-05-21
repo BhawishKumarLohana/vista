@@ -11,7 +11,6 @@ export default function FeatureCard({ name, description, className = "", feature
         viewport={{ once: true, amount: 0.3 }}
         className="bg-gradient-to-br from-gray-900 to-black border border-gray-700 rounded-2xl shadow-xl p-6 md:p-8 w-full max-w-3xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0 md:space-x-8 backdrop-blur-md"
       >
-        {/* Left: Text Content */}
         <div className="flex-1">
           <h2 className="text-2xl md:text-3xl font-bold text-purple-400 font-mono mb-2">
             {name}
@@ -21,7 +20,6 @@ export default function FeatureCard({ name, description, className = "", feature
           </p>
         </div>
 
-        {/* View Feature Button */}
         <button
           className="bg-purple-600 hover:bg-purple-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition duration-300"
           onClick={() => {
@@ -31,7 +29,6 @@ export default function FeatureCard({ name, description, className = "", feature
           View Feature
         </button>
 
-        {/* Animated Orb */}
         <motion.div
           className="w-24 h-24 bg-gradient-to-tr from-purple-600 via-green-300 to-transparent rounded-full blur-sm opacity-60 hidden md:block"
           animate={{ scale: [1, 1.1, 1], rotate: [0, 15, -10, 0] }}

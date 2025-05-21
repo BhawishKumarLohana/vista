@@ -19,13 +19,13 @@ export async function POST(req) {
       return Response.json({ error: "Missing or invalid input" }, { status: 400 });
     }
 
-    // 🔍 Get user
+    //  Get user
     const [user] = await prisma.$queryRawUnsafe(
       `SELECT user_id FROM User WHERE email = ? LIMIT 1`,
       email
     );
 
-    // 🔍 Get coin
+    //  Get coin
     const [coin] = await prisma.$queryRawUnsafe(
       `SELECT coin_id FROM Coin WHERE name = ? LIMIT 1`,
       selectedCoin
@@ -38,7 +38,7 @@ export async function POST(req) {
     const userId = user.user_id;
     const coinId = coin.coin_id;
 
-    // 🔍 Check existing portfolio entry
+    // Check existing portfolio entry
     const [existingEntry] = await prisma.$queryRawUnsafe(
       `SELECT amount FROM PortfolioEntry WHERE user_id = ? AND coin_id = ? LIMIT 1`,
       userId,
@@ -47,7 +47,7 @@ export async function POST(req) {
 
     if (action === "buy") {
       if (existingEntry) {
-        // 🔁 Update (increment amount)
+        //  Update (increment amount)
         await prisma.$executeRawUnsafe(
           `UPDATE PortfolioEntry SET amount = amount + ? WHERE user_id = ? AND coin_id = ?`,
           amount,
@@ -86,7 +86,7 @@ export async function POST(req) {
       }
     }
 
-    // 🧾 Log transaction
+    //  Log transaction
     await prisma.$executeRawUnsafe(
       `INSERT INTO TrackRecord (user_id, coin_id, amount, action) VALUES (?, ?, ?, ?)`,
       userId,

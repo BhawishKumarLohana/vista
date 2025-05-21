@@ -98,7 +98,7 @@ export default function ProfilePage() {
       });
       setSearchResults(prev => prev.filter(r => r.request_id !== request_id));
     } catch (err) {
-      console.error("Accept failed:", err);
+      console.error("Accept has failed:", err);
     }
   };
 

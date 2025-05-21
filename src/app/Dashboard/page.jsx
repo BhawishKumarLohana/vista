@@ -49,7 +49,7 @@ const fetchPortfolio = async () => {
   } catch (err) {
     console.error("Portfolio fetch error:", err);
   } finally {
-    setCheckingAuth(false); // ✅ make sure loading stops
+    setCheckingAuth(false); 
   }
 };
 
@@ -73,7 +73,7 @@ const fetchPortfolio = async () => {
     fetchPortfolio();
   } else {
     const err = await res.json();
-    alert(err.error || "Transaction failed"); // ✅ Display clear message
+    alert(err.error || "Transaction has failed"); 
   }
 };
 
@@ -102,7 +102,6 @@ const fetchPortfolio = async () => {
         Log Out
       </button>
 
-      {/* Buy/Sell Transaction Form */}
       <div className="w-full max-w-4xl bg-black/40 p-6 rounded-lg shadow-lg backdrop-blur-md border border-purple-700 mb-12">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Coin Dropdown */}

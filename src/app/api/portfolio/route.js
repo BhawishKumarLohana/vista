@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const SECRET = "demo_secret_key";
 
-// ✅ GET: Fetch user's portfolio with nested coin object
+// Fetch user's portfolio with nested coin object
 export async function GET(req) {
   const authHeader = req.headers.get("authorization");
 
@@ -51,7 +51,7 @@ export async function GET(req) {
   }
 }
 
-// ✅ POST: Add or update a portfolio entry
+//  Add or update a portfolio entry
 export async function POST(req) {
   const authHeader = req.headers.get("authorization");
 
@@ -69,7 +69,7 @@ export async function POST(req) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // 🔍 Check if entry already exists
+    // Check if entry already exists
     const [existing] = await prisma.$queryRawUnsafe(
       `
       SELECT entry_id, amount FROM PortfolioEntry
@@ -82,7 +82,7 @@ export async function POST(req) {
     let entry;
 
     if (existing) {
-      // 🔁 Update
+      // Update
       await prisma.$executeRawUnsafe(
         `
         UPDATE PortfolioEntry
@@ -101,7 +101,7 @@ export async function POST(req) {
         amount: existing.amount + amount,
       };
     } else {
-      // ➕ Insert
+      //  Insert
       await prisma.$executeRawUnsafe(
         `
         INSERT INTO PortfolioEntry (user_id, coin_id, amount)

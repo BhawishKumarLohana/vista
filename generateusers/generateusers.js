@@ -8,13 +8,13 @@ async function generateFakeUsers(numUsers) {
 
   for (let i = 0; i < numUsers; i++) {
     const fullName = faker.person.fullName();
-    const firstName = fullName.split(' ')[0];  // Extract first name
+    const firstName = fullName.split(' ')[0];  
 
     const user = {
       full_Name: fullName,
       email: faker.internet.email(),
       password: faker.internet.password(),
-      displayName: firstName,  // Use first name from full name
+      displayName: firstName,  
     };
 
     users.push(user);
@@ -29,9 +29,9 @@ async function saveUsersToDatabase(users) {
       await prisma.user.create({
         data: user,
       });
-      console.log(`✅ User ${user.email} saved.`);
+      console.log(` User ${user.email} saved.`);
     } catch (err) {
-      console.error(`❌ Error saving user ${user.email}:`, err.message);
+      console.error(` Error saving user ${user.email}:`, err.message);
     }
   }
 }
@@ -44,6 +44,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error("❌ Error:", err.message);
+  console.error(" Error:", err.message);
   prisma.$disconnect();
 });

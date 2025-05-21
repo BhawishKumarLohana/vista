@@ -17,7 +17,6 @@ export default async function CoinDetailPage({ params }) {
   <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-900 text-white px-4 py-10">
       <div className="max-w-4xl mx-auto">
         
-        {/* Back to all coins */}
         <div className="mb-6">
           <Link
             href="/coins"
@@ -27,7 +26,6 @@ export default async function CoinDetailPage({ params }) {
           </Link>
         </div>
 
-        {/* Coin Header */}
         <div className="mb-10 border-b border-gray-700 pb-6">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-2">
             {selectedCoin.name}
@@ -37,7 +35,6 @@ export default async function CoinDetailPage({ params }) {
           </p>
         </div>
 
-        {/* Coin Details Component */}
         <CoinDetails selectedCoin={selectedCoin} />
       </div>
     </div>

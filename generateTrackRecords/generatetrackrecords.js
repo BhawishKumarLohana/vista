@@ -9,12 +9,12 @@ async function generateFakeTrackRecords() {
     const coins = await prisma.coin.findMany();
 
     if (users.length === 0 || coins.length === 0) {
-      console.error('❌ No users or coins found in the database.');
+      console.error(' No users or coins found in the database.');
       return;
     }
 
     for (const user of users) {
-      const recordCount = Math.floor(Math.random() * 10) + 1; // between 1 and 10
+      const recordCount = Math.floor(Math.random() * 10) + 1; 
 
       for (let i = 0; i < recordCount; i++) {
         const coin = coins[Math.floor(Math.random() * coins.length)];
@@ -23,7 +23,7 @@ async function generateFakeTrackRecords() {
 
         // Calculate realistic coin amount based on price, cap at 500
         let amount = (Math.random() * (base / price));
-        amount = Math.min(amount, 500); // cap to 500
+        amount = Math.min(amount, 500); 
         amount = parseFloat(amount.toFixed(6));
 
         const trackRecord = {
@@ -37,10 +37,10 @@ async function generateFakeTrackRecords() {
         await prisma.trackRecord.create({ data: trackRecord });
       }
 
-      console.log(`✅ Generated ${recordCount} records for user ${user.user_id}`);
+      console.log(` Generated ${recordCount} records for user ${user.user_id}`);
     }
   } catch (err) {
-    console.error('❌ Error generating track records:', err.message);
+    console.error(' Error generating track records:', err.message);
   } finally {
     await prisma.$disconnect();
   }

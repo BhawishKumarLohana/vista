@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import prisma from "@/lib/db";
 
-const SECRET = "demo_secret_key"; // Use env in production
+const SECRET = "demo_secret_key"; 
 
 export async function POST(req) {
   const authHeader = req.headers.get("Authorization");

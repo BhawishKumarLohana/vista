@@ -45,7 +45,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu  */}
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
@@ -71,7 +71,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu  */}
       {isOpen && (
         <>
           <div
@@ -116,7 +116,7 @@ export default function Navbar() {
               />
             </div>
 
-            {/* Mobile Menu Links */}
+            {/* Mobile Menu  */}
             {[
               { href: "/dashboard", label: "DASHBOARD" },
               { href: "/coins", label: "COINS" },
