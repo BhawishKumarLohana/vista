@@ -19,7 +19,7 @@ async function assignUserAlerts() {
         const currentPrice = coin.price;
 
         if (!currentPrice || currentPrice <= 0) {
-          console.warn(`⚠️ Skipping coin ${coin.coin_id} due to invalid price.`);
+          console.warn(` Skipping coin ${coin.coin_id} due to invalid price.`);
           continue;
         }
         const floor = getRandomFloat(currentPrice * 0.9, currentPrice * 0.99);
@@ -34,7 +34,7 @@ async function assignUserAlerts() {
           },
         });
 
-        console.log(`🔔 Created alert for user ${user.user_id} on coin ${coin.coin_id}: floor ${floor}, ceiling ${ceiling}`);
+        console.log(` Created alert for user ${user.user_id} on coin ${coin.coin_id}: floor ${floor}, ceiling ${ceiling}`);
       }
     }
   } catch (err) {

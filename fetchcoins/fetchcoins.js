@@ -62,9 +62,9 @@ async function fetchAndSaveCoins() {
       console.log(` ${name} (${symbol}) saved.`);
     }
 
-    console.log('🎉 All coins processed.');
+    console.log(' All coins processed.');
   } catch (err) {
-    console.error('❌ Error:', err.message);
+    console.error(' Error:', err.message);
   } finally {
     await prisma.$disconnect();
   }
