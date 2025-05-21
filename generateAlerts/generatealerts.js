@@ -1,3 +1,5 @@
+// THIS FILE IS DEPRECIATED THIS IS NOT PART OF OUR PROJECT. THIS WAS MADE TO GENERATE DATA.
+
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 

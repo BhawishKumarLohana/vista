@@ -1,3 +1,5 @@
+// THIS FILE IS DEPRECIATED THIS IS NOT PART OF OUR PROJECT. THIS WAS MADE TO GENERATE DATA
+
 const { faker } = require('@faker-js/faker');
 const { PrismaClient } = require('@prisma/client');
 

@@ -1,3 +1,4 @@
+
 const axios = require('axios');
 const { PrismaClient } = require('@prisma/client');
 
@@ -41,7 +42,6 @@ async function fetchAndSaveHistorical(coinSymbol, coinId) {
 }
 
 async function run() {
-  // Fetch all coins from your DB
   const coins = await prisma.coin.findMany();
 
   for (const coin of coins) {
