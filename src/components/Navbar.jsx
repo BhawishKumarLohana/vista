@@ -14,9 +14,9 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex items-center">
             <img
-              src="/vistalogo-removebg-preview.png"
+              src="/vistalogo.png"
               alt="Logo"
-              className="h-22 py-1 px-4 mt-2 cursor-pointer"
+              className="h-30 py-1 px-4 mt-2 cursor-pointer"
               onClick={() => (window.location.href = "/")}
             />
           </div>
