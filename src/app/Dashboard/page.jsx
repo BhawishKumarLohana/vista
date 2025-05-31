@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PortfolioTable from "@/components/PortfolioTable";
 import PortfolioPieChart from "@/components/PortfolioPieChart";
 import { Button } from "@/components/ui/Button";
 import { CoinList } from "@/components/CoinList";
