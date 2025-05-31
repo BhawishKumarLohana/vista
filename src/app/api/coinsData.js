@@ -1,9 +1,8 @@
 const axios = require('axios');
-const { PrismaClient } = require('@prisma/client');
 const { NextResponse } = require('next/server');
 
 // Initialize Prisma Client
-const prisma = new PrismaClient();
+import prisma from "@/lib/db";
 
 // API key directly in the script
 const API_KEY = 'd7d7ed92-da9d-45c2-a2be-dbb97f1ee5ee'; 

@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+import prisma from "@/lib/db";
 
 export default async function CoinPage({ params }) {
   const { id } = params;

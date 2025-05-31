@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+import prisma from "@/lib/db";
 
 export async function POST(req) {
   const { user_id } = await req.json(); // receiver ID (current user)
