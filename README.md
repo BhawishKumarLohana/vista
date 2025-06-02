@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 💰 Vista – Crypto Tracker
 
-## Getting Started
+**Vista** is a full-stack cryptocurrency tracking and portfolio management platform built as a real-world database project. It provides users with live coin data, interactive historical charts, personal portfolios, email alerts, and a social friend system.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🔄 Live coin prices via **CoinMarketCap** & **CryptoCompare** APIs
+- 📈 Historical charts with filters (24H, 7D, 30D, 1Y)
+- 📬 Price alerts with automatic email notifications
+- 💼 Portfolio tracking with buy/sell transactions
+- 👥 Friend system: send requests, view activity
+- 🌙 Dark mode UI with motion transitions
+- 🔒 Secure JWT-based authentication
+- 📊 Responsive dashboards and visuals
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧱 Tech Stack
 
-## Learn More
+| Layer       | Tech                                |
+|------------|-------------------------------------|
+| Frontend    | Next.js (App Router), Tailwind CSS  |
+| Backend     | Node.js (API Routes), Server Components |
+| ORM         | Prisma                              |
+| Database    | MySQL (hosted on Railway)           |
+| Auth        | JWT Tokens                          |
+| Charts      | Recharts                            |
+| Email       | Nodemailer (for alerts)             |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠 Setup Instructions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/your-username/vista.git
+   cd vista
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
